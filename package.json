@@ -2,7 +2,7 @@
     "name": "agent-track",
     "type": "module",
     "packageManager": "pnpm@10.33.0",
-    "description": "",
+    "description": "Lightweight CLI to visualize and trace the execution trajectory of a single agent session",
     "license": "MIT",
     "homepage": "https://github.com/lonewolfyx/agent-track",
     "bugs": {
