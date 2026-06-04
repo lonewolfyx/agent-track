@@ -33,6 +33,7 @@
         "@nuxt/eslint": "^1.15.2",
         "@nuxt/icon": "^2.2.1",
         "@tailwindcss/vite": "^4.3.0",
+        "@vueuse/core": "^14.3.0",
         "@vueuse/nuxt": "^14.2.1",
         "eslint": "^10.1.0",
         "jiti": "^2.6.1",
