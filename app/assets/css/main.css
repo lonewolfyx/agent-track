@@ -118,7 +118,22 @@
         @apply border-border outline-ring/50;
     }
 
+    html{
+        @apply h-full;
+    }
+
     body {
-        @apply bg-background text-foreground;
+        @apply text-foreground flex h-full text-base antialiased lg:overflow-hidden bg-muted;
+    }
+
+    #__nuxt{
+        @apply flex grow;
+    }
+}
+
+@layer base {
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
     }
 }
