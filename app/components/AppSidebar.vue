@@ -21,18 +21,34 @@
                 <SidebarGroupContent>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <SidebarMenuButton as-child>
+                            <AppSidebarMenuButton>
                                 <a href="#">
                                     <Home />
                                     <span>Home</span>
                                 </a>
-                            </SidebarMenuButton>
+                            </AppSidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarGroupContent>
             </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter />
+        <SidebarFooter>
+            <SidebarGroup>
+                <SidebarGroupLabel>Application</SidebarGroupLabel>
+                <SidebarGroupContent>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <AppSidebarMenuButton>
+                                <a href="#">
+                                    <Icon name="line-md:github" />
+                                    <span>GitHub</span>
+                                </a>
+                            </AppSidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroupContent>
+            </SidebarGroup>
+        </SidebarFooter>
     </Sidebar>
 </template>
 
