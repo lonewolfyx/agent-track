@@ -14,6 +14,8 @@ export default defineNuxtConfig({
         enabled: true,
     },
 
+    ssr: false,
+
     icon: {
         mode: 'svg',
     },
