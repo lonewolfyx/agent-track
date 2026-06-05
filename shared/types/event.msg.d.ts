@@ -135,13 +135,11 @@ export interface CodexEventTurnAbortedPayload {
     duration_ms: number
 }
 
-export interface CodexWebSearchAction {
-    type: 'search' | 'open_page' | 'find_in_page' | 'other'
-    query?: string
-    queries?: string[]
-    url?: string
-    pattern?: string
-}
+export type CodexWebSearchAction
+    = | { type: 'search', query?: string, queries?: Array<string> }
+        | { type: 'open_page', url?: string }
+        | { type: 'find_in_page', url?: string, pattern?: string }
+        | { type: 'other' }
 
 export interface CodexEventWebSearchEndPayload {
     type: 'web_search_end'
