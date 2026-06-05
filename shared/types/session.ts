@@ -3,13 +3,18 @@ export interface CodexSessionListItem {
     title: string
     model: {
         model: string
-        effort: number
+        effort?: string
     }[]
     cwd: string
     filename: string
     prompt: number
     call: number
     createTime: string
+}
+
+export interface CodexSessionMonthGroup {
+    label: string
+    children: CodexSessionListItem[]
 }
 
 export type CodexSessionTurnStatus = 'completed' | 'aborted' | 'running'
