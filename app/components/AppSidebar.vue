@@ -17,19 +17,40 @@
         </SidebarHeader>
         <SidebarContent>
             <SidebarGroup>
-                <SidebarGroupLabel>Platform</SidebarGroupLabel>
-                <SidebarGroupContent>
-                    <SidebarMenu>
+                <SidebarGroupLabel>时间</SidebarGroupLabel>
+                <SidebarMenu>
+                    <Collapsible
+                        v-for="group in sessionGroups"
+                        :key="group.label"
+                        as-child
+                        default-open
+                        class="group/collapsible"
+                    >
                         <SidebarMenuItem>
-                            <AppSidebarMenuButton>
-                                <a href="#">
-                                    <Home />
-                                    <span>Home</span>
-                                </a>
-                            </AppSidebarMenuButton>
+                            <CollapsibleTrigger as-child>
+                                <SidebarMenuButton :tooltip="group.label">
+                                    <span>{{ group.label }}</span>
+                                    <ChevronRight class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                </SidebarMenuButton>
+                            </CollapsibleTrigger>
+
+                            <CollapsibleContent>
+                                <SidebarMenuSub>
+                                    <SidebarMenuSubItem
+                                        v-for="session in group.children"
+                                        :key="session.key"
+                                    >
+                                        <AppSidebarMenuButton>
+                                            <a href="#">
+                                                <span>{{ session.title }}</span>
+                                            </a>
+                                        </AppSidebarMenuButton>
+                                    </SidebarMenuSubItem>
+                                </SidebarMenuSub>
+                            </CollapsibleContent>
                         </SidebarMenuItem>
-                    </SidebarMenu>
-                </SidebarGroupContent>
+                    </Collapsible>
+                </SidebarMenu>
             </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
@@ -53,9 +74,25 @@
 </template>
 
 <script setup lang="ts">
-import { GalleryVerticalEnd, Home } from '@lucide/vue'
+import type { CodexSessionMonthGroup } from '#shared/types/session'
+import { ChevronRight, GalleryVerticalEnd } from '@lucide/vue'
+import { computed } from 'vue'
 
 defineOptions({
     name: 'AppSidebar',
 })
+
+const { data: sessions } = useFetch<CodexSessionMonthGroup[]>('/api/sessions', {
+    default: () => [],
+})
+
+const sessionGroups = computed(() =>
+    sessions.value.map(group => ({
+        label: group.label,
+        children: group.children.map(session => ({
+            key: session.id || session.filename,
+            title: session.title || 'void chat',
+        })),
+    })),
+)
 </script>
