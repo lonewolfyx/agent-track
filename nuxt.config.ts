@@ -1,7 +1,18 @@
+import { homedir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+
+const rootPath = dirname(fileURLToPath(import.meta.url))
+const homeCodexPath = join(homedir(), '.codex', 'sessions')
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    runtimeConfig: {
+        codexSessionsPath: rootPath,
+        // codexSessionsPath: homeCodexPath,
+    },
+
     modules: [
         // '@nuxt/content',
         '@nuxt/eslint',
