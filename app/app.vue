@@ -34,5 +34,4 @@
 </template>
 
 <script setup lang="ts">
-import ProjectSelect from '~/components/ProjectSelect.vue'
 </script>
