@@ -454,11 +454,12 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: 'Missing session path' })
     }
 
-    const chats = await getSessionDetailV2(path)
+    const { session_meta, chat: chats } = await getSessionDetailV2(path)
 
     return {
         id,
         path,
+        session_meta,
         chats,
     }
 })
