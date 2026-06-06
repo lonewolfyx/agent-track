@@ -21,13 +21,16 @@
                 </div>
             </div>
         </header>
-        <div class="flex min-h-0 flex-1 flex-col lg:flex-row">
+        <div class="flex min-h-0 flex-1 flex-col">
             <div class="m-2.5 mt-0 flex min-h-0 flex-1 rounded-xl border border-input bg-background">
                 <main class="flex min-h-0 flex-1 overflow-hidden" role="main">
                     <div class="flex min-h-0 flex-1 p-2">
                         <WorkspaceTrack class="min-h-0 flex-1" />
                     </div>
                 </main>
+            </div>
+            <div class="min-h-80 hidden">
+                <span>terminal</span>
             </div>
         </div>
     </div>
