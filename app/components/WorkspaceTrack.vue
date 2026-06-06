@@ -20,29 +20,10 @@
             class="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.92),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#fdfdfd_100%)]"
         >
             <Background
-                pattern-color="#d7deeb"
-                color="#d7deeb"
                 :gap="22"
                 :size="1.4"
                 variant="dots"
             />
-
-            <Panel position="top-left">
-                <div class="rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                        Agent Workflow
-                    </p>
-                    <h2 class="mt-1 text-sm font-semibold text-slate-700">
-                        Workspace Trace
-                    </h2>
-                </div>
-            </Panel>
-
-            <Panel position="top-right">
-                <div class="rounded-full border border-white/70 bg-white/85 px-3 py-2 text-xs font-medium text-slate-500 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm">
-                    Dify-style routing canvas
-                </div>
-            </Panel>
 
             <Controls
                 position="bottom-right"
@@ -194,7 +175,7 @@ import {
 } from '@lucide/vue'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { Handle, Panel, PanOnScrollMode, Position, VueFlow } from '@vue-flow/core'
+import { Handle, PanOnScrollMode, Position, VueFlow } from '@vue-flow/core'
 import { cn } from '@/lib/utils'
 
 import '@vue-flow/core/dist/style.css'
