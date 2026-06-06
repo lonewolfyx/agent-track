@@ -1,5 +1,5 @@
 <template>
-    <section class="h-full min-h-px w-full [&_.vue-flow__controls-button+_.vue-flow__controls-button]:border-t [&_.vue-flow__controls-button+_.vue-flow__controls-button]:border-slate-200/90 [&_.vue-flow__controls-button]:h-[42px] [&_.vue-flow__controls-button]:w-[42px] [&_.vue-flow__controls-button]:border-0 [&_.vue-flow__controls-button]:bg-transparent [&_.vue-flow__controls-button]:text-slate-600 [&_.vue-flow__controls-button:hover]:bg-slate-50/95 [&_.vue-flow__controls]:overflow-hidden [&_.vue-flow__controls]:rounded-[18px] [&_.vue-flow__controls]:border [&_.vue-flow__controls]:border-slate-200/90 [&_.vue-flow__controls]:bg-white/94 [&_.vue-flow__controls]:shadow-[0_20px_45px_-30px_rgba(15,23,42,0.35)] [&_.vue-flow__controls]:backdrop-blur-[14px] [&_.vue-flow__edge-path]:stroke-linecap-round [&_.vue-flow__edge-path]:stroke-linejoin-round [&_.vue-flow__node.selected]:shadow-none [&_.vue-flow__node]:border-0 [&_.vue-flow__node]:bg-transparent [&_.vue-flow__node]:p-0 [&_.vue-flow__node]:shadow-none [&_.vue-flow__pane]:bg-transparent">
+    <section class="flex h-full min-h-0 w-full flex-1 overflow-hidden [&_.vue-flow__controls-button+_.vue-flow__controls-button]:border-t [&_.vue-flow__controls-button+_.vue-flow__controls-button]:border-slate-200/90 [&_.vue-flow__controls-button]:h-[42px] [&_.vue-flow__controls-button]:w-[42px] [&_.vue-flow__controls-button]:border-0 [&_.vue-flow__controls-button]:bg-transparent [&_.vue-flow__controls-button]:text-slate-600 [&_.vue-flow__controls-button:hover]:bg-slate-50/95 [&_.vue-flow__controls]:overflow-hidden [&_.vue-flow__controls]:rounded-[18px] [&_.vue-flow__controls]:border [&_.vue-flow__controls]:border-slate-200/90 [&_.vue-flow__controls]:bg-white/94 [&_.vue-flow__controls]:shadow-[0_20px_45px_-30px_rgba(15,23,42,0.35)] [&_.vue-flow__controls]:backdrop-blur-[14px] [&_.vue-flow__edge-path]:stroke-linecap-round [&_.vue-flow__edge-path]:stroke-linejoin-round [&_.vue-flow__node.selected]:shadow-none [&_.vue-flow__node]:border-0 [&_.vue-flow__node]:bg-transparent [&_.vue-flow__node]:p-0 [&_.vue-flow__node]:shadow-none [&_.vue-flow__pane]:bg-transparent">
         <VueFlow
             :nodes="nodes"
             :edges="edges"
@@ -17,7 +17,7 @@
             :pan-on-scroll-mode="PanOnScrollMode.Free"
             :prevent-scrolling="true"
             :pan-on-drag="true"
-            class="bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.92),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#fdfdfd_100%)]"
+            class="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.92),transparent_34%),linear-gradient(180deg,#f8fafc_0%,#fdfdfd_100%)]"
         >
             <Background
                 pattern-color="#d7deeb"
