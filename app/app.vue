@@ -37,4 +37,5 @@
 </template>
 
 <script setup lang="ts">
+import WorkspaceTrack from '@/components/workspace-track/WorkspaceTrack.vue'
 </script>
