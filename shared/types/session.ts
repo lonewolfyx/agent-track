@@ -120,18 +120,97 @@ export interface CodexSessionTurnDetail {
     workflow: CodexSessionWorkflowGraph
 }
 
+export interface CodexSessionTokenUsage {
+    inputTokens: number
+    cachedInputTokens: number
+    outputTokens: number
+    reasoningOutputTokens: number
+    totalTokens: number
+}
+
+export interface CodexSessionModelInfo {
+    model: string
+    effort?: string
+}
+
+export interface CodexSessionToolBrief {
+    name: string
+    kind: CodexSessionToolKind
+    count: number
+}
+
+// --- Thought step kinds ---
+
+export interface CodexThoughtReasoning {
+    kind: 'reasoning'
+    content: string
+    payload: unknown
+}
+
+export interface CodexThoughtCommentary {
+    kind: 'commentary'
+    content: string
+    payload: unknown
+}
+
+export interface CodexThoughtTool {
+    kind: 'tool'
+    toolKind: CodexSessionToolKind
+    toolName: string
+    callId: string
+    input: string
+    output: string
+    status?: string
+    callPayload: unknown
+    resultPayload?: unknown
+}
+
+export interface CodexThoughtTokenUsage {
+    kind: 'token_usage'
+    tokenUsage: CodexSessionTokenUsage
+    payload: unknown
+}
+
+export interface CodexThoughtUserMessage {
+    kind: 'user_message'
+    content: string
+    payload: unknown
+}
+
+export interface CodexThoughtError {
+    kind: 'error'
+    message: string
+    payload: unknown
+}
+
+export type CodexSessionThoughtStep
+    = | CodexThoughtReasoning
+        | CodexThoughtCommentary
+        | CodexThoughtTool
+        | CodexThoughtTokenUsage
+        | CodexThoughtUserMessage
+        | CodexThoughtError
+
+export interface CodexSessionChatTurn {
+    id: string
+    startedAt: number
+    completedAt?: number
+    durationMs?: number
+    status: CodexSessionTurnStatus
+
+    models: CodexSessionModelInfo[]
+
+    userMessage: string
+
+    thoughts: CodexSessionThoughtStep[]
+    finalAnswer: string
+    finalAnswerTokenUsage: CodexSessionTokenUsage
+
+    totalTokenUsage: CodexSessionTokenUsage
+
+    tools: CodexSessionToolBrief[]
+}
+
 export interface CodexSessionDetail {
-    chat: CodexSessionChatItem[][]
-    // turnCount: number
-    // summary: {
-    //     chatCount: number
-    //     toolCount: number
-    //     thoughtCount: number
-    // }
-    // tools: CodexSessionToolSummaryItem[]
-    // skills: CodexSessionSkillItem[]
-    // availableSkills: string[]
-    // thoughts: CodexSessionThoughtItem[]
-    // turns: CodexSessionTurnDetail[]
-    // workflow: CodexSessionWorkflowGraph
+    turns: CodexSessionChatTurn[]
 }
