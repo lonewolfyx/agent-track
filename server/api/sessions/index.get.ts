@@ -1,24 +1,9 @@
 import type { CodexSession } from '#shared/types/codex'
 import type { CodexSessionListItem, CodexSessionMonthGroup } from '#shared/types/session'
 import { basename, resolve } from 'node:path'
+import dayjs from 'dayjs'
 import { glob } from 'glob'
 import { readJsonlLines } from '#server/utils/codex'
-
-function getSessionMonthLabel(createTime: string) {
-    const matchedDate = createTime.match(/^(\d{4})-(\d{1,2})/)
-
-    if (matchedDate) {
-        return `${matchedDate[1]}-${Number(matchedDate[2])}`
-    }
-
-    const date = new Date(createTime)
-
-    if (Number.isNaN(date.getTime())) {
-        return '未知时间'
-    }
-
-    return `${date.getFullYear()}-${date.getMonth() + 1}`
-}
 
 export default defineEventHandler(async () => {
     const config = useRuntimeConfig()
@@ -65,7 +50,7 @@ export default defineEventHandler(async () => {
     sessions.sort((a, b) => b.createTime.localeCompare(a.createTime))
 
     return sessions.reduce<CodexSessionMonthGroup[]>((groups, session) => {
-        const label = getSessionMonthLabel(session.createTime)
+        const label = dayjs(session.createTime).format('YYYY-MM')
         const previousGroup = groups.at(-1)
 
         if (!previousGroup || previousGroup.label !== label) {
