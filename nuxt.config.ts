@@ -2,9 +2,12 @@ import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import { createResolver } from 'nuxt/kit'
 
 const rootPath = dirname(fileURLToPath(import.meta.url))
 const homeCodexPath = join(homedir(), '.codex', 'sessions')
+
+const { resolve } = createResolver(import.meta.url)
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -29,6 +32,12 @@ export default defineNuxtConfig({
 
     icon: {
         mode: 'svg',
+        customCollections: [
+            {
+                prefix: 'active',
+                dir: resolve('./app/assets/icon'),
+            },
+        ],
     },
 
     app: {
