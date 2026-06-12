@@ -12,9 +12,10 @@
                 'text-left cursor-pointer transition-colors',
                 'hover:bg-gray-500/10 rounded-xl',
             )"
-            @click="() => {
-                console.log(213)
-            }"
+            @click="handleDrawerShower({
+                id: session.id,
+                title: session.title,
+            })"
         >
             <div class="min-w-0 flex-1">
                 <Badge
@@ -68,6 +69,7 @@
 <script lang="ts" setup>
 import type { CodexSessionListItem } from '#shared/types/session'
 import dayjs from 'dayjs'
+import { handleDrawerShower } from '~/components/session/index'
 import { cn } from '~/lib/utils'
 
 defineOptions({
