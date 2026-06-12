@@ -23,7 +23,7 @@ export default defineEventHandler(async () => {
 
         const title = lines.filter(line => line.type === 'event_msg' && line.payload.type === 'user_message')[0]! as CodexSession<'event_msg', 'user_message'>
 
-        const { prompt, call } = parseSessionMetrics(lines)
+        const { prompt, call, token, skills } = parseSessionMetrics(lines)
 
         return {
             id: metaPayload.id,
@@ -44,6 +44,8 @@ export default defineEventHandler(async () => {
             createTime: metaPayload.timestamp,
             cwd: resolve(filePath),
             filename: basename(filePath),
+            token: token ?? {},
+            skills: skills ?? 0,
         }
     }))
 

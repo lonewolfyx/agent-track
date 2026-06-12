@@ -1,3 +1,5 @@
+import type { CodexTokenUsage } from '#shared/types/event.msg'
+
 export interface CodexSessionListItem {
     id: string
     title: string
@@ -10,6 +12,8 @@ export interface CodexSessionListItem {
     prompt: number
     call: number
     createTime: string
+    token: CodexTokenUsage
+    skills: number
 }
 
 export interface CodexSessionMonthGroup {
