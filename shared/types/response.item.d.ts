@@ -168,7 +168,9 @@ export interface CodexResponseItemPayload {
 
     image_generation_call: CodexResponseImageGenerationCall
     local_shell_call: CodexResponseLocalShellCall
-    mcp_tool_call_output: ''
+    mcp_tool_call_output: {
+        type: 'mcp_tool_call_output'
+    }
     context_compaction: {
         type: 'context_compaction'
         encrypted_content?: string
