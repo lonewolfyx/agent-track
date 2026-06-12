@@ -1,6 +1,6 @@
 <template>
     <DrawerPortal>
-        <DrawerOverlay class="bg-zinc-500/10 backdrop-blur-xs backdrop-brightness-95" />
+        <DrawerOverlay class="bg-transparent backdrop-blur-sm backdrop-brightness-95" />
         <DrawerContent
             data-slot="drawer-content"
             v-bind="{ ...$attrs, ...forwarded }"
