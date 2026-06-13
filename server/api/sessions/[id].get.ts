@@ -163,7 +163,7 @@ function findPendingCall(
     return queue.find(item => !item.output) || queue[0]
 }
 
-export async function getSessionDetailV2(path: string): Promise<CodexSessionDetailV2> {
+export async function getSessionDetail(path: string): Promise<CodexSessionDetailV2> {
     const lines = await readJsonlLines(path)
     const sessionMeta = lines.find(line => line.type === 'session_meta') as CodexSession<'session_meta'>
     const sessionId = sessionMeta.payload.id
@@ -371,5 +371,5 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: 'Missing session path' })
     }
 
-    return getSessionDetailV2(path)
+    return getSessionDetail(path)
 })
