@@ -52,13 +52,7 @@ export function handleSessionDetail(options: HandleDrawerShowerOptions) {
             ),
         },
         {
-            default: () =>
-                h('div', {
-                    'class': 'min-h-0 flex-1 overflow-y-auto overflow-x-hidden touch-pan-y select-text',
-                    'data-vaul-no-drag': '',
-                }, [
-                    h(SessionDetail, options),
-                ]),
+            default: () => h(SessionDetail, options),
         },
     )
 
@@ -85,7 +79,7 @@ export function handleSessionDetail(options: HandleDrawerShowerOptions) {
                         'onUpdate:open': handleOpenChange,
                     },
                     {
-                        default: drawerContent(),
+                        default: drawerContent,
                     },
                 )
         },
