@@ -17,16 +17,12 @@ export { default as SessionTimeLineList } from './SessionTimeLineList.vue'
 
 export const [useSession, useSessionProvider] = createContext<AsyncData<any, any>>('codex-session')
 
-export function handleSessionDetail() {
-    return h('div', {})
-}
-
 export interface HandleDrawerShowerOptions {
     title: string
     id: string
 }
 
-export function handleDrawerShower(options: HandleDrawerShowerOptions) {
+export function handleSessionDetail(options: HandleDrawerShowerOptions) {
     if (typeof document === 'undefined') {
         return
     }

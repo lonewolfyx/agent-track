@@ -12,7 +12,7 @@
                 'text-left cursor-pointer transition-colors',
                 'hover:bg-gray-500/10 rounded-xl',
             )"
-            @click="handleDrawerShower({
+            @click="handleSessionDetail({
                 id: session.id,
                 title: session.title,
             })"
@@ -70,7 +70,7 @@
 import type { CodexSessionListItem } from '#shared/types/session'
 import dayjs from 'dayjs'
 import { cn } from '~/lib/utils'
-import { handleDrawerShower } from '.'
+import { handleSessionDetail } from '.'
 
 defineOptions({
     name: 'SessionTimeLineItem',
