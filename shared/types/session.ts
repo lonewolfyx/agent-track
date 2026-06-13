@@ -47,7 +47,7 @@ export interface CodexSessionThinking {
 export interface ChatTurnList {
     id: string
     startedAt: string
-    turn_context: CodexTurnContextPayload
+    turn_context: object | CodexTurnContextPayload
     question: string
     answer: string
     total_token_usage: CodexTokenUsage | null
