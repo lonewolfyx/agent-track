@@ -28,7 +28,7 @@ type CodexSessionPayloadKey<Type extends keyof CodexSessionTypeMap>
         ? keyof CodexSessionTypeMap[Type]
         : never
 
-type CodexSessionPayload<
+export type CodexSessionPayload<
     Type extends keyof CodexSessionTypeMap,
     SessionPayload extends CodexSessionPayloadKey<Type> | undefined = undefined,
 > = SessionPayload extends CodexSessionPayloadKey<Type>
