@@ -52,6 +52,7 @@ export function handleDrawerShower(options: HandleDrawerShowerOptions) {
                 'overflow-hidden',
                 'border border-input border-r-0 border-b-0 shadow-lg',
                 'bg-white/50 backdrop-blur-[7px]',
+                'focus-visible:outline-0 focus:outline-transparent',
             ),
         },
         {
