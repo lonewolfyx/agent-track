@@ -1,445 +1,360 @@
+import type { CodexSession, CodexSessionItem, CodexSessionPayload } from '#shared/types/codex'
+import type {
+    CodexEventAgentMessagePayload,
+    CodexEventAgentReasoningPayload,
+    CodexEventErrorPayload,
+    CodexEventTaskCompletePayload,
+    CodexEventTokenCountPayload,
+    CodexEventTurnAbortedPayload,
+    CodexTokenUsage,
+    CodexUserMessagePayload,
+} from '#shared/types/event.msg'
+import type { CodexResponseFunctionCall, CodexResponseMessage } from '#shared/types/response.item'
+import type { CodexSessionDetailV2, CodexSessionThinkingItem } from '#shared/types/session'
 import { readJsonlLines } from '#server/utils/codex'
 
-// type SessionPayload = Record<string, unknown> & {
-//     type?: string
-// }
-//
-// interface ToolTrace {
-//     kind: CodexSessionToolKind
-//     name: string
-//     callId?: string
-// }
-//
-// interface ChatTurnBucket {
-//     turnId: string
-//     startedAt: string
-//     chat: CodexSessionChatItem[]
-// }
-//
-// function getPayload(line: CodexSessionItem): SessionPayload {
-//     return (line.payload ?? {}) as SessionPayload
-// }
-//
-// function getPayloadType(line: CodexSessionItem): string {
-//     return typeof getPayload(line).type === 'string' ? getPayload(line).type as string : ''
-// }
-//
-// function getString(value: unknown): string {
-//     return typeof value === 'string' ? value : ''
-// }
-//
-// function normalizeText(value: string): string {
-//     return value.trim().replace(/\r\n/g, '\n')
-// }
-//
-// function summarizeText(value: unknown, limit = 300): string {
-//     const text = normalizeText(typeof value === 'string' ? value : JSON.stringify(value ?? ''))
-//     if (!text) {
-//         return ''
-//     }
-//
-//     return text.length <= limit ? text : `${text.slice(0, limit)}...`
-// }
-//
-// function buildReasoningText(payload: SessionPayload): string {
-//     const summary = payload.summary
-//     if (Array.isArray(summary)) {
-//         const summaryText = normalizeText(
-//             summary
-//                 .map((item) => {
-//                     if (typeof item === 'string') {
-//                         return item
-//                     }
-//
-//                     if (!item || typeof item !== 'object') {
-//                         return ''
-//                     }
-//
-//                     return getString((item as Record<string, unknown>).text)
-//                 })
-//                 .filter(Boolean)
-//                 .join('\n\n'),
-//         )
-//
-//         if (summaryText) {
-//             return summaryText
-//         }
-//     }
-//
-//     return normalizeText(getString(payload.content))
-// }
-//
-// function createTurn(turnId: string, timestamp: string): ChatTurnBucket {
-//     return {
-//         turnId,
-//         startedAt: timestamp,
-//         chat: [],
-//     }
-// }
-//
-// function pushChatItem(
-//     turn: ChatTurnBucket,
-//     item: Omit<CodexSessionChatItem, 'id' | 'turnId'>,
-//     sequence: number,
-// ) {
-//     turn.chat.push({
-//         id: `chat_${sequence}`,
-//         turnId: turn.turnId,
-//         ...item,
-//     })
-// }
-//
-// export async function getSessionDetail(path: string): Promise<CodexSessionDetail> {
-//     const lines = await readJsonlLines(path)
-//     const turns = new Map<string, ChatTurnBucket>()
-//     const toolTraces = new Map<string, ToolTrace>()
-//     const thoughtDedup = new Map<string, Set<string>>()
-//
-//     let currentTurnId = ''
-//     let sequence = 0
-//
-//     const nextSequence = () => ++sequence
-//
-//     const ensureTurn = (turnId: string, timestamp: string) => {
-//         const existing = turns.get(turnId)
-//         if (existing) {
-//             return existing
-//         }
-//
-//         const turn = createTurn(turnId, timestamp)
-//         turns.set(turnId, turn)
-//         return turn
-//     }
-//
-//     const resolveTurn = (line: CodexSessionItem) => {
-//         const payload = getPayload(line)
-//         const turnId = getString(payload.turn_id) || currentTurnId
-//
-//         if (!turnId) {
-//             return null
-//         }
-//
-//         currentTurnId = turnId
-//         return ensureTurn(turnId, line.timestamp)
-//     }
-//
-//     const pushThought = (
-//         turn: ChatTurnBucket,
-//         timestamp: string,
-//         source: CodexSessionChatItem['source'],
-//         content: string,
-//     ) => {
-//         const normalizedContent = normalizeText(content)
-//         if (!normalizedContent) {
-//             return
-//         }
-//
-//         const turnThoughtKeys = thoughtDedup.get(turn.turnId) ?? new Set<string>()
-//         if (turnThoughtKeys.has(normalizedContent)) {
-//             return
-//         }
-//
-//         turnThoughtKeys.add(normalizedContent)
-//         thoughtDedup.set(turn.turnId, turnThoughtKeys)
-//
-//         pushChatItem(turn, {
-//             timestamp,
-//             type: '思考',
-//             content: normalizedContent,
-//             source,
-//         }, nextSequence())
-//     }
-//
-//     const recordToolCall = (
-//         turn: ChatTurnBucket,
-//         timestamp: string,
-//         tool: ToolTrace,
-//         input: string,
-//         status?: string,
-//     ) => {
-//         if (tool.callId) {
-//             toolTraces.set(tool.callId, tool)
-//         }
-//
-//         pushChatItem(turn, {
-//             timestamp,
-//             type: '工具调用',
-//             title: tool.name,
-//             content: input,
-//             toolKind: tool.kind,
-//             toolName: tool.name,
-//             callId: tool.callId,
-//             status,
-//         }, nextSequence())
-//     }
-//
-//     const recordToolResult = (
-//         turn: ChatTurnBucket,
-//         timestamp: string,
-//         tool: ToolTrace,
-//         output: string,
-//         status?: string,
-//     ) => {
-//         pushChatItem(turn, {
-//             timestamp,
-//             type: '工具返回',
-//             title: tool.name,
-//             content: output,
-//             toolKind: tool.kind,
-//             toolName: tool.name,
-//             callId: tool.callId,
-//             status,
-//         }, nextSequence())
-//     }
-//
-//     for (const line of lines) {
-//         const payload = getPayload(line)
-//         const payloadType = getPayloadType(line)
-//
-//         if (line.type === 'event_msg' && payloadType === 'task_started') {
-//             currentTurnId = getString(payload.turn_id)
-//             if (currentTurnId) {
-//                 ensureTurn(currentTurnId, line.timestamp)
-//             }
-//             continue
-//         }
-//
-//         if (line.type === 'turn_context') {
-//             currentTurnId = getString(payload.turn_id) || currentTurnId
-//             if (currentTurnId) {
-//                 ensureTurn(currentTurnId, line.timestamp)
-//             }
-//             continue
-//         }
-//
-//         const turn = resolveTurn(line)
-//         if (!turn) {
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'user_message') {
-//             pushChatItem(turn, {
-//                 timestamp: line.timestamp,
-//                 type: '提问',
-//                 content: normalizeText(getString(payload.message)),
-//             }, nextSequence())
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'agent_message') {
-//             const phase = getString(payload.phase)
-//             const message = normalizeText(getString(payload.message))
-//
-//             pushChatItem(turn, {
-//                 timestamp: line.timestamp,
-//                 type: phase === 'final_answer' ? '回答' : '过程',
-//                 content: message,
-//                 status: phase || undefined,
-//             }, nextSequence())
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'agent_reasoning') {
-//             pushThought(turn, line.timestamp, 'agent_reasoning', getString(payload.text))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'reasoning') {
-//             pushThought(turn, line.timestamp, 'reasoning', buildReasoningText(payload))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'function_call') {
-//             recordToolCall(turn, line.timestamp, {
-//                 kind: 'function',
-//                 name: getString(payload.name),
-//                 callId: getString(payload.call_id),
-//             }, normalizeText(getString(payload.arguments)))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'custom_tool_call') {
-//             recordToolCall(turn, line.timestamp, {
-//                 kind: 'custom',
-//                 name: getString(payload.name),
-//                 callId: getString(payload.call_id),
-//             }, normalizeText(getString(payload.input)), getString(payload.status))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'web_search_call') {
-//             recordToolCall(turn, line.timestamp, {
-//                 kind: 'web_search',
-//                 name: 'web_search',
-//                 callId: getString(payload.call_id) || `web_search_${nextSequence()}`,
-//             }, summarizeText(payload.action), getString(payload.status))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'tool_search_call') {
-//             recordToolCall(turn, line.timestamp, {
-//                 kind: 'tool_search',
-//                 name: 'tool_search',
-//                 callId: getString(payload.call_id),
-//             }, summarizeText(payload.arguments), getString(payload.status))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'function_call_output') {
-//             const callId = getString(payload.call_id)
-//             const trace = toolTraces.get(callId)
-//             if (!trace) {
-//                 continue
-//             }
-//
-//             recordToolResult(turn, line.timestamp, trace, normalizeText(getString(payload.output)))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'custom_tool_call_output') {
-//             const callId = getString(payload.call_id)
-//             const trace = toolTraces.get(callId)
-//             if (!trace) {
-//                 continue
-//             }
-//
-//             recordToolResult(turn, line.timestamp, trace, normalizeText(getString(payload.output)))
-//             continue
-//         }
-//
-//         if (line.type === 'response_item' && payloadType === 'tool_search_output') {
-//             const callId = getString(payload.call_id)
-//             const trace = toolTraces.get(callId)
-//             if (!trace) {
-//                 continue
-//             }
-//
-//             recordToolResult(turn, line.timestamp, trace, summarizeText(payload.tools), getString(payload.status))
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'exec_command_end') {
-//             const trace = toolTraces.get(getString(payload.call_id)) ?? {
-//                 kind: 'function' as const,
-//                 name: 'exec_command',
-//                 callId: getString(payload.call_id),
-//             }
-//
-//             recordToolResult(
-//                 turn,
-//                 line.timestamp,
-//                 trace,
-//                 summarizeText(payload.aggregated_output || payload.stdout || payload.stderr),
-//                 getString(payload.status),
-//             )
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'patch_apply_end') {
-//             const trace = toolTraces.get(getString(payload.call_id)) ?? {
-//                 kind: 'custom' as const,
-//                 name: 'apply_patch',
-//                 callId: getString(payload.call_id),
-//             }
-//
-//             recordToolResult(
-//                 turn,
-//                 line.timestamp,
-//                 trace,
-//                 summarizeText(payload.changes || payload.stdout || payload.stderr),
-//                 getString(payload.status),
-//             )
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'web_search_end') {
-//             const trace = toolTraces.get(getString(payload.call_id)) ?? {
-//                 kind: 'web_search' as const,
-//                 name: 'web_search',
-//                 callId: getString(payload.call_id),
-//             }
-//
-//             recordToolResult(turn, line.timestamp, trace, summarizeText(payload.action))
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'mcp_tool_call_end') {
-//             const invocation = (payload.invocation ?? {}) as Record<string, unknown>
-//             const name = [getString(invocation.server), getString(invocation.tool)]
-//                 .filter(Boolean)
-//                 .join('.')
-//
-//             const trace = toolTraces.get(getString(payload.call_id)) ?? {
-//                 kind: 'mcp' as const,
-//                 name: name || 'mcp_tool',
-//                 callId: getString(payload.call_id),
-//             }
-//
-//             recordToolResult(turn, line.timestamp, trace, summarizeText(payload.result))
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'error') {
-//             pushChatItem(turn, {
-//                 timestamp: line.timestamp,
-//                 type: '异常',
-//                 content: normalizeText(getString(payload.message)),
-//             }, nextSequence())
-//             continue
-//         }
-//
-//         if (line.type === 'event_msg' && payloadType === 'turn_aborted') {
-//             pushChatItem(turn, {
-//                 timestamp: line.timestamp,
-//                 type: '异常',
-//                 content: normalizeText(getString(payload.reason)),
-//                 status: 'aborted',
-//             }, nextSequence())
-//         }
-//     }
-//
-//     return {
-//         chat: [...turns.values()]
-//             .sort((a, b) => a.startedAt.localeCompare(b.startedAt))
-//             .map(turn => turn.chat),
-//     }
-// }
+type SessionPayload = Record<string, unknown> & {
+    type?: string
+}
 
-export async function getSessionDetailV2(path: string): Promise<any> {
+interface ThinkingToolPairOutput {
+    event?: SessionPayload
+    response?: SessionPayload
+}
+
+interface ChatTurnBucket {
+    id: string
+    startedAt: string
+    duration: number
+    turn_context?: Record<string, unknown>
+    question: string
+    answer: string
+    total_token_usage: CodexTokenUsage | null
+    thinking: CodexSessionThinkingItem[]
+}
+
+interface ThinkingToolPairItem extends CodexSessionThinkingItem {
+    callId?: string
+    toolName?: string
+    skillPath?: string
+    call?: SessionPayload
+    output?: ThinkingToolPairOutput
+}
+
+const EVENT_OUTPUT_TO_CALL_TYPE: Record<string, string> = {
+    exec_command_end: 'function_call',
+    patch_apply_end: 'custom_tool_call',
+    web_search_end: 'web_search_call',
+    mcp_tool_call_end: 'mcp_tool_call',
+}
+
+const RESPONSE_OUTPUT_TO_CALL_TYPE: Record<string, string> = {
+    function_call_output: 'function_call',
+    custom_tool_call_output: 'custom_tool_call',
+    tool_search_output: 'tool_search_call',
+    mcp_tool_call_output: 'mcp_tool_call',
+    dynamic_tool_call_response: 'dynamic_tool_call_request',
+}
+
+const CALL_TYPES = new Set([
+    'function_call',
+    'custom_tool_call',
+    'tool_search_call',
+    'web_search_call',
+    'mcp_tool_call',
+    'dynamic_tool_call_request',
+    'image_generation_call',
+    'local_shell_call',
+])
+
+function getSkillPath(payload: CodexResponseFunctionCall): string | undefined {
+    if (payload.type !== 'function_call' || payload.name !== 'exec_command') {
+        return undefined
+    }
+
+    const command = (JSON.parse(payload.arguments) as { cmd: string })?.cmd || ''
+    const matched = command.match(/\/Users\/[^\s'"]+\/(?:\.codex|\.agents)\/skills\/[^\s'"]+\.md/g)
+    return matched?.[0] ?? undefined
+}
+
+function resolveToolName(payload: CodexSessionPayload<'event_msg'> | CodexSessionPayload<'response_item'>): string {
+    switch (payload.type) {
+        case 'function_call':
+        case 'custom_tool_call':
+            return (payload as CodexSessionPayload<'response_item', 'function_call'> | CodexSessionPayload<'response_item', 'custom_tool_call'>).name
+        case 'mcp_tool_call': {
+            const invocation = (payload as CodexResponseMcpToolCall).invocation
+            if (invocation) {
+                return [invocation?.server, invocation?.tool].filter(Boolean).join('.')
+            }
+
+            return [(payload as CodexResponseMcpToolCall)?.server || '', (payload as CodexResponseMcpToolCall).tool || ''].filter(Boolean).join('.')
+        }
+        case 'dynamic_tool_call_request':
+            return (payload as CodexSessionPayload<'event_msg', 'dynamic_tool_call_request'>).tool
+        case 'tool_search_call':
+            return 'tool_search'
+        case 'web_search_call':
+            return 'web_search'
+        case 'image_generation_call':
+            return 'image_generation'
+        case 'local_shell_call':
+            return 'local_shell'
+        default:
+            return ''
+    }
+}
+
+function createContentThinkingItem(
+    line: CodexSessionItem,
+    content: string,
+    extra?: Partial<CodexSessionThinkingItem>,
+): CodexSessionThinkingItem {
+    return {
+        type: line.payload.type,
+        timestamp: line.timestamp,
+        phase: line.payload?.phase || undefined,
+        content,
+        // payload,
+        ...extra,
+    }
+}
+
+function createOutputOnlyItem(
+    line: CodexSessionItem,
+    callType: string,
+    target: 'event' | 'response',
+): ThinkingToolPairItem {
+    return {
+        type: callType,
+        timestamp: line.timestamp,
+        callId: line.payload.call_id,
+        toolName: resolveToolName(line.payload),
+        call: undefined,
+        output: {
+            [target]: line.payload,
+        },
+    }
+}
+
+function attachOutput(item: ThinkingToolPairItem, line: CodexSessionItem, target: 'event' | 'response') {
+    if (!item.output) {
+        item.output = {}
+    }
+
+    item.output[target] = line.payload
+}
+
+function findPendingCall(
+    pendingByCallId: Map<string, ThinkingToolPairItem>,
+    pendingByType: Map<string, ThinkingToolPairItem[]>,
+    callType: string,
+    callId: string,
+): ThinkingToolPairItem | undefined {
+    if (callId && pendingByCallId.has(callId)) {
+        return pendingByCallId.get(callId)
+    }
+
+    const queue = pendingByType.get(callType)
+    if (!queue?.length) {
+        return undefined
+    }
+
+    return queue.find(item => !item.output) || queue[0]
+}
+
+export async function getSessionDetailV2(path: string): Promise<CodexSessionDetailV2> {
     const lines = await readJsonlLines(path)
-    const chats = new Map<string, any>()
+    const sessionMeta = lines.find(line => line.type === 'session_meta') as CodexSession<'session_meta'>
+    const sessionId = sessionMeta.payload.id
 
-    let turnId = ''
+    const chat: ChatTurnBucket[] = []
+    let currentTurn: ChatTurnBucket | null = null
+    let pendingByCallId = new Map<string, ThinkingToolPairItem>()
+    let pendingByType = new Map<string, ThinkingToolPairItem[]>()
 
-    const session_meta = lines.filter(line => line.type === 'session_meta')[0]
-
-    for (const line of lines) {
+    for (const [index, line] of (lines as CodexSessionItem[]).entries()) {
         const payload = line.payload
+        const payloadType = payload.type
+        const nextLine = lines[index + 1]
+        const nextPayload = nextLine ? (nextLine as CodexSessionItem).payload : null
+        const nextPayloadType = nextLine ? nextPayload.type : ''
 
-        if (line.type === 'event_msg' && payload.type === 'task_started') {
-            turnId = payload.turn_id
-            chats.set(turnId, {
-                id: turnId,
-                startedAt: payload.started_at,
-                chat: [
-                    { ...payload },
-                ],
-            })
+        if (line.type === 'event_msg' && payloadType === 'task_started') {
+            currentTurn = {
+                id: sessionId,
+                startedAt: sessionMeta.payload.timestamp,
+                duration: 0,
+                turn_context: undefined,
+                question: '',
+                answer: '',
+                total_token_usage: null,
+                thinking: [],
+            }
+            chat.push(currentTurn)
+            pendingByCallId = new Map<string, ThinkingToolPairItem>()
+            pendingByType = new Map<string, ThinkingToolPairItem[]>()
             continue
         }
 
-        if (['session_meta', 'reasoning'].includes(line.type)) {
+        if (!currentTurn) {
             continue
         }
 
-        if (chats.has(turnId)) {
-            chats.get(turnId).chat.push(line)
+        if (line.type === 'turn_context') {
+            currentTurn.turn_context = payload
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'user_message') {
+            if (!currentTurn.question) {
+                currentTurn.question = (payload as CodexUserMessagePayload).message
+            }
+            continue
+        }
+
+        // 有问题的判断，修复
+        if (line.type === 'response_item' && payloadType === 'message') {
+            const role = payload.role
+            const content = (payload as CodexResponseMessage).content.find(item => item.type === 'input_text')?.text || ''
+
+            if (
+                role === 'user'
+                && nextLine?.type === 'event_msg'
+                && nextPayloadType === 'user_message'
+                && content
+                && content === nextPayload.message
+            ) {
+                currentTurn.thinking.push(createContentThinkingItem(line, content, {
+                    role: 'user',
+                    isGuidance: true,
+                }))
+            }
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'task_complete') {
+            currentTurn.answer = (payload as CodexEventTaskCompletePayload).last_agent_message
+            currentTurn.duration = (payload as CodexEventTaskCompletePayload).duration_ms
+            currentTurn = null
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'turn_aborted') {
+            currentTurn.duration = (payload as CodexEventTurnAbortedPayload).duration_ms
+            currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventTurnAbortedPayload).reason))
+            currentTurn = null
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'token_count') {
+            if ((payload as CodexEventTokenCountPayload).info) {
+                currentTurn.total_token_usage = (payload as CodexEventTokenCountPayload).info.total_token_usage
+                currentTurn.thinking.push(createContentThinkingItem(line, payload))
+                continue
+            }
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'agent_message') {
+            if ((payload as CodexEventAgentMessagePayload).phase !== 'final_answer') {
+                currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventAgentMessagePayload).message, {
+                    role: nextLine?.type === 'response_item'
+                        && nextPayloadType === 'message'
+                        && nextPayload?.role === 'assistant'
+                        ? 'assistant'
+                        : undefined,
+                }))
+            }
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'agent_reasoning') {
+            currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventAgentReasoningPayload).text))
+            continue
+        }
+
+        if (line.type === 'response_item' && payloadType === 'reasoning') {
+            currentTurn.thinking.push(createContentThinkingItem(line, payload))
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'error') {
+            currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventErrorPayload).message))
+            continue
+        }
+
+        if (CALL_TYPES.has(payloadType)) {
+            const item = {
+                type: payloadType,
+                timestamp: line.timestamp,
+                call_id: payload.call_id,
+                toolName: resolveToolName(payload),
+                skill: getSkillPath(payload),
+                call: payload,
+                output: undefined,
+            }
+            currentTurn.thinking.push(item)
+
+            if (!['image_generation_call', 'local_shell_call'].includes(payloadType)) {
+                pendingByCallId.set(payload.call_id, item)
+
+                const queue = pendingByType.get(payloadType) ?? []
+                queue.push(item)
+                pendingByType.set(payloadType, queue)
+            }
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType in EVENT_OUTPUT_TO_CALL_TYPE) {
+            const callType = EVENT_OUTPUT_TO_CALL_TYPE[payloadType]
+            if (!callType) {
+                continue
+            }
+            const item = findPendingCall(pendingByCallId, pendingByType, callType, payload.call_id)
+
+            if (item) {
+                attachOutput(item, line, 'event')
+            }
+            else {
+                currentTurn.thinking.push(createOutputOnlyItem(line, callType, 'event'))
+            }
+            continue
+        }
+
+        if (line.type === 'event_msg' && payloadType === 'dynamic_tool_call_response') {
+            const item = findPendingCall(
+                pendingByCallId,
+                pendingByType,
+                'dynamic_tool_call_request',
+                payload.call_id,
+            )
+
+            if (item) {
+                attachOutput(item, line, 'event')
+            }
+            else {
+                currentTurn.thinking.push(createOutputOnlyItem(line, 'dynamic_tool_call_request', 'event'))
+            }
+            continue
+        }
+
+        if (line.type === 'response_item' && payloadType in RESPONSE_OUTPUT_TO_CALL_TYPE) {
+            const callType = RESPONSE_OUTPUT_TO_CALL_TYPE[payloadType]!
+            const item = findPendingCall(pendingByCallId, pendingByType, callType, payload.call_id)
+
+            if (item) {
+                attachOutput(item, line, 'response')
+            }
+            else {
+                currentTurn.thinking.push(createOutputOnlyItem(line, callType, 'response'))
+            }
         }
     }
 
     return {
-        session_meta,
-        chat: [...chats.values()],
+        id: sessionId,
+        path,
+        chat,
     }
 }
 
@@ -454,12 +369,5 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: 'Missing session path' })
     }
 
-    const { session_meta, chat: chats } = await getSessionDetailV2(path)
-
-    return {
-        id,
-        path,
-        session_meta,
-        chats,
-    }
+    return getSessionDetailV2(path)
 })
