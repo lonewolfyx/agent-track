@@ -207,29 +207,31 @@ export async function getSessionDetailV2(path: string): Promise<CodexSessionDeta
         }
 
         if (line.type === 'event_msg' && payloadType === 'user_message') {
+            const previousLine = lines[index - 1]
+            const previousPayload = previousLine ? (previousLine as CodexSessionItem).payload : null
+            const previousPayloadType = previousLine ? previousPayload.type : ''
+            const message = (payload as CodexUserMessagePayload).message
+
             if (!currentTurn.question) {
-                currentTurn.question = (payload as CodexUserMessagePayload).message
+                currentTurn.question = message
+            }
+            else if (
+                previousLine?.type === 'response_item'
+                && previousPayloadType === 'message'
+                && previousPayload?.role === 'user'
+                && message
+                && ((previousPayload as CodexResponseMessage).content.find(item => item.type === 'input_text')?.text || '') === message
+            ) {
+                currentTurn.thinking.push(createContentThinkingItem(line, message, {
+                    role: 'user',
+                    isGuidance: true,
+                    pairedPayload: previousPayload,
+                }))
             }
             continue
         }
 
-        // 有问题的判断，修复
         if (line.type === 'response_item' && payloadType === 'message') {
-            const role = payload.role
-            const content = (payload as CodexResponseMessage).content.find(item => item.type === 'input_text')?.text || ''
-
-            if (
-                role === 'user'
-                && nextLine?.type === 'event_msg'
-                && nextPayloadType === 'user_message'
-                && content
-                && content === nextPayload.message
-            ) {
-                currentTurn.thinking.push(createContentThinkingItem(line, content, {
-                    role: 'user',
-                    isGuidance: true,
-                }))
-            }
             continue
         }
 
