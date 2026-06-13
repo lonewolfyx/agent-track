@@ -30,6 +30,11 @@ export interface CodexEventAgentMessagePayload {
     memory_citation: string | null
 }
 
+export interface CodexEventAgentReasoningPayload {
+    type: 'agent_reasoning'
+    text: string
+}
+
 export interface CodexPatchChangeAdd {
     type: 'add'
     content: string
@@ -99,6 +104,11 @@ export interface CodexEventContextCompactedPayload {
     type: 'context_compacted'
 }
 
+export interface CodexEventDuration {
+    secs: number
+    nanos: number
+}
+
 export interface CodexEventExecCommandEndPayload {
     type: 'exec_command_end'
     call_id: string
@@ -119,10 +129,7 @@ export interface CodexEventExecCommandEndPayload {
     // aggregated_output skill
     aggregated_output: string
     exit_code: number
-    duration: {
-        secs: number
-        nanos: number
-    }
+    duration: CodexEventDuration
     formatted_output: string
     status: 'completed' | 'failed'
 }
@@ -154,6 +161,58 @@ export interface CodexEventThreadNameUpdatedPayload {
     thread_name: string
 }
 
+export interface CodexEventDynamicToolCallRequestPayload {
+    type: 'dynamic_tool_call_request'
+    call_id: string
+    turn_id: string
+    namespace?: string | null
+    tool: string
+    arguments: Record<string, unknown>
+}
+
+export interface CodexEventDynamicToolCallResponsePayload {
+    type: 'dynamic_tool_call_response'
+    call_id: string
+    turn_id: string
+    namespace?: string | null
+    tool: string
+    arguments: Record<string, unknown>
+    content_items: Array<Record<string, unknown> & { type: string }>
+    success: boolean
+    error: unknown
+    duration: CodexEventDuration
+}
+
+export interface CodexEventCollabAgentSpawnEndPayload {
+    type: 'collab_agent_spawn_end'
+    call_id: string
+    sender_thread_id: string
+    new_thread_id: string
+    new_agent_nickname: string
+    new_agent_role: string
+    prompt: string
+    model: string
+    reasoning_effort: string
+    status: string
+}
+
+export interface CodexEventCollabWaitingEndPayload {
+    type: 'collab_waiting_end'
+    sender_thread_id: string
+    call_id: string
+    statuses: Record<string, unknown>
+}
+
+export interface CodexEventCollabCloseEndPayload {
+    type: 'collab_close_end'
+    call_id: string
+    sender_thread_id: string
+    receiver_thread_id: string
+    receiver_agent_nickname: string
+    receiver_agent_role: string
+    status: string
+}
+
 export interface CodexEventErrorPayload {
     type: 'error'
     message: string
@@ -172,10 +231,7 @@ export interface CodexEventMcpToolCallEndPayload {
         tool: string
         arguments: Record<string, unknown>
     }
-    duration: {
-        secs: number
-        nanos: number
-    }
+    duration: CodexEventDuration
     result: {
         Ok: {
             content: {
@@ -190,11 +246,22 @@ export interface CodexEventMcpToolCallEndPayload {
     }
 }
 
+export interface CodexEventUnknownPayload {
+    type: string
+    [key: string]: unknown
+}
+
+// https://github.com/openai/codex/blob/main/codex-rs/app-server-protocol/src/protocol/thread_history.rs#L171
+// https://github.com/openai/codex/blob/main/codex-rs/protocol/src/protocol.rs#L1180
 export interface CodexEventMsgPayload {
     user_message: CodexUserMessagePayload
+
     task_started: CodexEventTaskStatedPayload
     task_complete: CodexEventTaskCompletePayload
+
     agent_message: CodexEventAgentMessagePayload
+
+    agent_reasoning: CodexEventAgentReasoningPayload
     patch_apply_end: CodexEventPatchApplyEndPayload
     token_count: CodexEventTokenCountPayload
     context_compacted: CodexEventContextCompactedPayload
@@ -202,6 +269,12 @@ export interface CodexEventMsgPayload {
     turn_aborted: CodexEventTurnAbortedPayload
     web_search_end: CodexEventWebSearchEndPayload
     thread_name_updated: CodexEventThreadNameUpdatedPayload
+    dynamic_tool_call_request: CodexEventDynamicToolCallRequestPayload
+    dynamic_tool_call_response: CodexEventDynamicToolCallResponsePayload
+    collab_agent_spawn_end: CodexEventCollabAgentSpawnEndPayload
+    collab_waiting_end: CodexEventCollabWaitingEndPayload
+    collab_close_end: CodexEventCollabCloseEndPayload
     error: CodexEventErrorPayload
     mcp_tool_call_end: CodexEventMcpToolCallEndPayload
+    other: CodexEventUnknownPayload
 }

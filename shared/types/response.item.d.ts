@@ -123,6 +123,20 @@ export interface CodexResponseToolSearchOutput {
     tools: CodexToolNamespace[]
 }
 
+export interface CodexResponseMcpToolCall {
+    type: 'mcp_tool_call'
+    call_id: string
+    status?: string
+    invocation?: {
+        server?: string
+        tool?: string
+        arguments?: Record<string, unknown>
+    }
+    server?: string
+    tool?: string
+    arguments?: Record<string, unknown>
+}
+
 export interface CodexResponseImageGenerationCall {
     type: 'image_generation_call'
     id: string
@@ -148,8 +162,22 @@ export interface CodexResponseLocalShellCall {
     action: { type: 'exec' } & LocalShellExecAction
 }
 
+export interface CodexResponseMcpToolCallOutput {
+    type: 'mcp_tool_call_output'
+    call_id: string
+    status?: string
+    output?: string | Array<FunctionCallOutputContentItem> | Record<string, unknown>
+    result?: unknown
+}
+
+export interface CodexResponseUnknownItem {
+    type: string
+    [key: string]: unknown
+}
+
 // https://github.com/openai/codex/blob/main/codex-rs/rollout-trace/src/reducer/conversation/normalize.rs#L59
 // https://github.com/openai/codex/blob/main/codex-rs/app-server-protocol/schema/typescript/ResponseItem.ts
+// https://github.com/openai/codex/blob/main/codex-rs/protocol/src/models.rs#L755
 export interface CodexResponseItemPayload {
     agent_message: CodexResponseAgentMessage
     message: CodexResponseMessage
@@ -168,9 +196,8 @@ export interface CodexResponseItemPayload {
 
     image_generation_call: CodexResponseImageGenerationCall
     local_shell_call: CodexResponseLocalShellCall
-    mcp_tool_call_output: {
-        type: 'mcp_tool_call_output'
-    }
+    mcp_tool_call: CodexResponseMcpToolCall
+    mcp_tool_call_output: CodexResponseMcpToolCallOutput
     context_compaction: {
         type: 'context_compaction'
         encrypted_content?: string
@@ -182,7 +209,5 @@ export interface CodexResponseItemPayload {
     compaction_trigger: {
         type: 'compaction_trigger'
     }
-    other: {
-        type: 'other'
-    }
+    other: CodexResponseUnknownItem
 }
