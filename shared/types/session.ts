@@ -139,3 +139,40 @@ export interface CodexSessionDetail {
     // turns: CodexSessionTurnDetail[]
     // workflow: CodexSessionWorkflowGraph
 }
+
+export interface CodexSessionThinkingItem {
+    type: string
+    timestamp: string
+    phase?: string
+    role?: string
+    isGuidance?: boolean
+    callId?: string
+    toolName?: string
+    skillPath?: string
+    content?: string
+    tokenUsage?: CodexTokenUsage | null
+    call?: Record<string, unknown>
+    output?: {
+        event?: Record<string, unknown>
+        response?: Record<string, unknown>
+    }
+    payload?: Record<string, unknown>
+    pairedPayload?: Record<string, unknown>
+}
+
+export interface CodexSessionDetailChatTurn {
+    id: string
+    startedAt: string
+    duration: number
+    turn_context?: Record<string, unknown>
+    question: string
+    answer: string
+    total_token_usage: CodexTokenUsage | null
+    thinking: CodexSessionThinkingItem[]
+}
+
+export interface CodexSessionDetailV2 {
+    id: string
+    path: string
+    chat: CodexSessionDetailChatTurn[]
+}
