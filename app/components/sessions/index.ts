@@ -3,7 +3,7 @@ import type { AsyncData } from '#app'
 import { createContext } from 'reka-ui'
 import { createApp, defineComponent, h, ref } from 'vue'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
-import SessionDetail from '~/components/session/SessionDetail.vue'
+import SessionDetail from '~/components/sessions/SessionDetail.vue'
 import { cn } from '~/lib/utils'
 
 export const [useSession, useSessionProvider] = createContext<AsyncData<any, any>>('codex-session')
