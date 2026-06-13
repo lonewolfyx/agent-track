@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useSession } from '~/components/sessions/index'
+import { useSession } from '.'
 
 defineOptions({
     name: 'Session',

@@ -3,8 +3,17 @@ import type { AsyncData } from '#app'
 import { createContext } from 'reka-ui'
 import { createApp, defineComponent, h, ref } from 'vue'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
-import SessionDetail from '~/components/sessions/SessionDetail.vue'
+import SessionDetail from '~/components/session/SessionDetail.vue'
 import { cn } from '~/lib/utils'
+
+export { default as Session } from './Session.vue'
+export { default as SessionDetail } from './SessionDetail.vue'
+export { default as SessionProvider } from './SessionProvider.vue'
+export { default as SessionTimeLine } from './SessionTimeLine.vue'
+export { default as SessionTimeLineGroup } from './SessionTimeLineGroup.vue'
+export { default as SessionTimeLineHeader } from './SessionTimeLineHeader.vue'
+export { default as SessionTimeLineItem } from './SessionTimeLineItem.vue'
+export { default as SessionTimeLineList } from './SessionTimeLineList.vue'
 
 export const [useSession, useSessionProvider] = createContext<AsyncData<any, any>>('codex-session')
 

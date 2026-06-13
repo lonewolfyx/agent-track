@@ -69,8 +69,8 @@
 <script lang="ts" setup>
 import type { CodexSessionListItem } from '#shared/types/session'
 import dayjs from 'dayjs'
-import { handleDrawerShower } from '~/components/sessions/index'
 import { cn } from '~/lib/utils'
+import { handleDrawerShower } from '.'
 
 defineOptions({
     name: 'SessionTimeLineItem',
