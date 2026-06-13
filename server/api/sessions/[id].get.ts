@@ -6,40 +6,11 @@ import type {
     CodexEventTaskCompletePayload,
     CodexEventTokenCountPayload,
     CodexEventTurnAbortedPayload,
-    CodexTokenUsage,
     CodexUserMessagePayload,
 } from '#shared/types/event.msg'
 import type { CodexResponseFunctionCall, CodexResponseMessage } from '#shared/types/response.item'
-import type { CodexSessionDetailV2, CodexSessionThinkingItem } from '#shared/types/session'
+import type { ChatTurnList, CodexSessionThinking } from '#shared/types/session'
 import { readJsonlLines } from '#server/utils/codex'
-
-type SessionPayload = Record<string, unknown> & {
-    type?: string
-}
-
-interface ThinkingToolPairOutput {
-    event?: SessionPayload
-    response?: SessionPayload
-}
-
-interface ChatTurnBucket {
-    id: string
-    startedAt: string
-    duration: number
-    turn_context?: Record<string, unknown>
-    question: string
-    answer: string
-    total_token_usage: CodexTokenUsage | null
-    thinking: CodexSessionThinkingItem[]
-}
-
-interface ThinkingToolPairItem extends CodexSessionThinkingItem {
-    callId?: string
-    toolName?: string
-    skillPath?: string
-    call?: SessionPayload
-    output?: ThinkingToolPairOutput
-}
 
 const EVENT_OUTPUT_TO_CALL_TYPE: Record<string, string> = {
     exec_command_end: 'function_call',
@@ -108,8 +79,8 @@ function resolveToolName(payload: CodexSessionPayload<'event_msg'> | CodexSessio
 function createContentThinkingItem(
     line: CodexSessionItem,
     content: string,
-    extra?: Partial<CodexSessionThinkingItem>,
-): CodexSessionThinkingItem {
+    extra?: Partial<CodexSessionThinking>,
+): CodexSessionThinking {
     return {
         type: line.payload.type,
         timestamp: line.timestamp,
@@ -124,11 +95,11 @@ function createOutputOnlyItem(
     line: CodexSessionItem,
     callType: string,
     target: 'event' | 'response',
-): ThinkingToolPairItem {
+): CodexSessionThinking {
     return {
         type: callType,
         timestamp: line.timestamp,
-        callId: line.payload.call_id,
+        call_id: line.payload.call_id,
         toolName: resolveToolName(line.payload),
         call: undefined,
         output: {
@@ -137,7 +108,7 @@ function createOutputOnlyItem(
     }
 }
 
-function attachOutput(item: ThinkingToolPairItem, line: CodexSessionItem, target: 'event' | 'response') {
+function attachOutput(item: CodexSessionThinking, line: CodexSessionItem, target: 'event' | 'response') {
     if (!item.output) {
         item.output = {}
     }
@@ -146,11 +117,11 @@ function attachOutput(item: ThinkingToolPairItem, line: CodexSessionItem, target
 }
 
 function findPendingCall(
-    pendingByCallId: Map<string, ThinkingToolPairItem>,
-    pendingByType: Map<string, ThinkingToolPairItem[]>,
+    pendingByCallId: Map<string, CodexSessionThinking>,
+    pendingByType: Map<string, CodexSessionThinking[]>,
     callType: string,
     callId: string,
-): ThinkingToolPairItem | undefined {
+): CodexSessionThinking | undefined {
     if (callId && pendingByCallId.has(callId)) {
         return pendingByCallId.get(callId)
     }
@@ -163,15 +134,15 @@ function findPendingCall(
     return queue.find(item => !item.output) || queue[0]
 }
 
-export async function getSessionDetail(path: string): Promise<CodexSessionDetailV2> {
+export async function getSessionDetail(path: string): Promise<CodexSessionDetail> {
     const lines = await readJsonlLines(path)
     const sessionMeta = lines.find(line => line.type === 'session_meta') as CodexSession<'session_meta'>
     const sessionId = sessionMeta.payload.id
 
-    const chat: ChatTurnBucket[] = []
-    let currentTurn: ChatTurnBucket | null = null
-    let pendingByCallId = new Map<string, ThinkingToolPairItem>()
-    let pendingByType = new Map<string, ThinkingToolPairItem[]>()
+    const chat: ChatTurnList[] = []
+    let currentTurn: ChatTurnList | null = null
+    let pendingByCallId = new Map<string, CodexSessionThinking>()
+    let pendingByType = new Map<string, CodexSessionThinking[]>()
 
     for (const [index, line] of (lines as CodexSessionItem[]).entries()) {
         const payload = line.payload
@@ -185,15 +156,15 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
                 id: sessionId,
                 startedAt: sessionMeta.payload.timestamp,
                 duration: 0,
-                turn_context: undefined,
+                turn_context: {},
                 question: '',
                 answer: '',
                 total_token_usage: null,
                 thinking: [],
             }
             chat.push(currentTurn)
-            pendingByCallId = new Map<string, ThinkingToolPairItem>()
-            pendingByType = new Map<string, ThinkingToolPairItem[]>()
+            pendingByCallId = new Map<string, CodexSessionThinking>()
+            pendingByType = new Map<string, CodexSessionThinking[]>()
             continue
         }
 
