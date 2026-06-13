@@ -1,6 +1,5 @@
 <template>
     <div class="relative w-full h-full z-30" data-vaul-no-drag>
-        <!--        <div>detail header</div> -->
         <div class="overflow-auto h-full">
             <div class="p-4">
                 <div class="select-none w-dvh h-full overflow-visible whitespace-nowrap">
@@ -147,9 +146,6 @@
                             <CollapsibleTrigger as-child>
                                 <Button class="bg-white text-secondary-foreground rounded-full border">
                                     <span>Home</span>
-                                    <ChevronRight
-                                        class="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90"
-                                    />
                                 </Button>
                             </CollapsibleTrigger>
                             <CollapsibleContent>
