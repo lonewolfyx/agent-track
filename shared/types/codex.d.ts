@@ -8,6 +8,7 @@ export interface CodexCompactedPayload {
     message: string
 }
 
+// https://github.com/openai/codex/blob/main/codex-rs/protocol/src/protocol.rs#L2910
 export interface CodexSessionTypeMap {
     session_meta: CodexSessionMetaPayload
     event_msg: CodexEventMsgPayload
