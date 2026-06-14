@@ -34,7 +34,7 @@ export default defineEventHandler(async () => {
                         m.payload.model,
                         {
                             model: m.payload.model,
-                            effort: m.payload.effort,
+                            effort: m.payload.effort ?? undefined,
                         },
                     ]),
                 ).values(),
@@ -44,7 +44,7 @@ export default defineEventHandler(async () => {
             createTime: metaPayload.timestamp,
             cwd: resolve(filePath),
             filename: basename(filePath),
-            token: token ?? {},
+            token,
             skills: skills ?? 0,
         }
     }))
