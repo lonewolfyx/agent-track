@@ -1,4 +1,5 @@
 import type { CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
+import type { CodexResponseReasoning } from '#shared/types/response.item'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 
 export interface CodexSessionListItem {
@@ -24,6 +25,10 @@ export interface CodexSessionMonthGroup {
 
 // -------------------
 
+export type ThinkingContent = string
+    | CodexResponseReasoning
+    | CodexEventTokenCountPayload
+
 export interface CodexSessionThinking {
     type: string
     timestamp: string
@@ -33,7 +38,7 @@ export interface CodexSessionThinking {
     call_id?: string
     toolName?: string
     skill?: string
-    content?: string | CodexEventTokenCountPayload
+    content?: ThinkingContent
     tokenUsage?: CodexTokenUsage
     call?: Record<string, unknown>
     output?: {
