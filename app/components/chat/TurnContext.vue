@@ -19,7 +19,7 @@
                 )"
             >
                 <Icon class="size-4" name="lucide:bot" />
-                <span class="font-mono capitalize">{{ turnContext.model }}</span>
+                <span class="font-mono uppercase">{{ turnContext.model }}</span>
             </div>
             <div
                 :class="cn(
