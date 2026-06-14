@@ -6,6 +6,7 @@
                 <ChatQuestion :question="chat.question" />
                 <CollapsibleContent>
                     <Bezier />
+
                     <div class="ml-0">
                         <div class="relative">
                             <div class="relative flex flex-col pl-4 pt-2">
