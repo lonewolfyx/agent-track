@@ -1,4 +1,4 @@
-import type { CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
+import type { CodexEventAgentMessagePayload, CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
 import type { CodexResponseReasoning } from '#shared/types/response.item'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 
@@ -26,8 +26,9 @@ export interface CodexSessionMonthGroup {
 // -------------------
 
 export type ThinkingContent = string
-    | CodexResponseReasoning
+    | CodexEventAgentMessagePayload
     | CodexEventTokenCountPayload
+    | CodexResponseReasoning
 
 export interface CodexSessionThinking {
     type: string

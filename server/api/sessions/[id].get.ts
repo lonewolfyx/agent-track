@@ -234,7 +234,7 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
 
         if (line.type === 'event_msg' && payloadType === 'agent_message') {
             if ((payload as CodexEventAgentMessagePayload).phase !== 'final_answer') {
-                currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventAgentMessagePayload).message, {
+                currentTurn.thinking.push(createContentThinkingItem(line, payload, {
                     role: nextLine?.type === 'response_item'
                         && nextPayloadType === 'message'
                         && nextPayload?.role === 'assistant'
