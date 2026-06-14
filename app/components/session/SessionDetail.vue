@@ -5,8 +5,7 @@
             <DrawerDescription />
         </DrawerHeader>
 
-        {{ props }}
-        <div class="relative w-full h-full z-30" data-vaul-no-drag>
+        <div class="relative w-full h-full z-30">
             <div class="overflow-auto h-full">
                 <div class="p-4">
                     <div class="select-none w-dvh h-full overflow-visible whitespace-nowrap">
@@ -61,7 +60,6 @@
                             </div>
                             <div class="pl-10 w-px h-4 border-r border-dashed" />
                         </div>
-                        <!-- -->
                         <div class="relative flex flex-col pl-6 pt-4">
                             <VerticalLine />
                             <Collapsible class="group/collapsible" default-open>
@@ -145,8 +143,6 @@
                                 </CollapsibleContent>
                             </Collapsible>
                         </div>
-                        <!-- -->
-                        <!-- -->
                         <div class="relative flex flex-col pl-6 pt-4">
                             <VerticalLine />
                             <Collapsible class="group/collapsible">
@@ -163,7 +159,6 @@
                                 </CollapsibleContent>
                             </Collapsible>
                         </div>
-                    <!-- -->
                     </div>
                 </div>
             </div>
@@ -172,6 +167,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { CodexSessionDetail } from '#shared/types/session'
 import type { SessionQueryParam } from '#shared/types/session.query'
 import { cn } from '~/lib/utils'
 
@@ -180,4 +176,22 @@ defineOptions({
 })
 
 const props = defineProps<SessionQueryParam>()
+
+const sessionDetail = shallowRef<CodexSessionDetail | null>(null)
+
+watch(
+    () => [props.id, props.path] as const,
+    async ([id, path], _, onCleanup) => {
+        const controller = new AbortController()
+        onCleanup(() => controller.abort())
+
+        sessionDetail.value = await $fetch<CodexSessionDetail>(`/api/sessions/${id}`, {
+            query: { path },
+            signal: controller.signal,
+        })
+    },
+    {
+        immediate: true,
+    },
+)
 </script>
