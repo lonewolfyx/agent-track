@@ -62,6 +62,7 @@
                                 :key="think.type"
                             >
                                 <ChatThinkingReasoning v-if="think.type === 'reasoning'" />
+                                <ChatThinkingAgentMessage v-if="think.type === 'agent_message'" :payload="think.content as CodexEventAgentMessagePayload" />
                                 <ChatTokenCount
                                     v-if="think.type === 'token_count'"
                                     :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
@@ -78,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
+import type { CodexEventAgentMessagePayload, CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
 import type { ChatTurnList } from '#shared/types/session'
 
 defineOptions({
