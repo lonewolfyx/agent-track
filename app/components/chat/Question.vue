@@ -1,22 +1,22 @@
 <template>
-    <TooltipProvider>
-        <Tooltip>
-            <TooltipTrigger as-child>
+    <Tooltip>
+        <TooltipTrigger as-child>
+            <CollapsibleTrigger as-child>
                 <Button
                     class="bg-white text-secondary-foreground hover:bg-white rounded-full border"
                 >
-                    <Icon name="arcticons:ask-ai" class="size-4" />
+                    <Icon class="size-4" name="arcticons:ask-ai" />
                     {{ question.length > 10 ? `${question.substring(0, 20)}...` : question }}
                 </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-                {{ question }}
-            </TooltipContent>
-        </Tooltip>
-    </TooltipProvider>
+            </CollapsibleTrigger>
+        </tooltiptrigger>
+        <TooltipContent side="bottom">
+            {{ question }}
+        </TooltipContent>
+    </tooltip>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 defineOptions({
     name: 'ChatQuestion',
 })
@@ -24,4 +24,8 @@ defineOptions({
 defineProps<{
     question: string
 }>()
+
+function handleClick() {
+
+}
 </script>
