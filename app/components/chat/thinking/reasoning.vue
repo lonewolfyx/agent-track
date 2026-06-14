@@ -3,10 +3,10 @@
         <VerticalLine />
         <div class="flex w-max items-center gap-2">
             <div
-                class="border border-dashed rounded-full bg-white overflow-hidden cursor-pointer"
+                class="border border-dashed border-yellow-500/50 rounded-full bg-yellow-500/10 overflow-hidden cursor-pointer"
             >
                 <Button
-                    class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
+                    class="bg-transparent hover:bg-transparent text-yellow-600/75 capitalize"
                     size="sm"
                 >
                     <Icon class="size-3" name="icon-park-twotone:brain" />
