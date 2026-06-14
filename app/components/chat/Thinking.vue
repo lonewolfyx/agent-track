@@ -75,7 +75,7 @@
                         </div>
                     </div>
 
-                    <ChatAnswer />
+                    <ChatAnswer :answer="chat.answer" />
                 </CollapsibleContent>
             </Collapsible>
         </div>
