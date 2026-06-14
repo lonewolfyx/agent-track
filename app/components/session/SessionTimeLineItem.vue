@@ -14,7 +14,7 @@
             )"
             @click="handleSessionDetail({
                 id: session.id,
-                title: session.title,
+                path: session.cwd,
             })"
         >
             <div class="min-w-0 flex-1">

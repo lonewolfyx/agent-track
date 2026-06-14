@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 import type { AsyncData } from '#app'
-import type { sessionQueryParam } from '#shared/types/session'
+import type { SessionQueryParam } from '#shared/types/session.query'
 import { createContext } from 'reka-ui'
 import { createApp, defineComponent, h, ref } from 'vue'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
@@ -18,7 +18,7 @@ export { default as SessionTimeLineList } from './SessionTimeLineList.vue'
 
 export const [useSession, useSessionProvider] = createContext<AsyncData<any, any>>('codex-session')
 
-export function handleSessionDetail(options: sessionQueryParam) {
+export function handleSessionDetail(options: SessionQueryParam) {
     if (typeof document === 'undefined') {
         return
     }

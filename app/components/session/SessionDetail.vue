@@ -5,6 +5,7 @@
             <DrawerDescription />
         </DrawerHeader>
 
+        {{ props }}
         <div class="relative w-full h-full z-30" data-vaul-no-drag>
             <div class="overflow-auto h-full">
                 <div class="p-4">
@@ -171,9 +172,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { SessionQueryParam } from '#shared/types/session.query'
 import { cn } from '~/lib/utils'
 
 defineOptions({
     name: 'SessionDetail',
 })
+
+const props = defineProps<SessionQueryParam>()
 </script>
