@@ -15,7 +15,7 @@
                                 v-for="chat in sessionDetail"
                                 :key="chat.id"
                             >
-                                <ChatSessionMeta />
+                                <ChatSessionMeta :started-at="chat.startedAt" />
                                 <ChatTurnContext :turn-context="chat.turn_context as CodexTurnContextPayload" />
                                 <ChatThinking />
                             </template>
