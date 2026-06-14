@@ -1,4 +1,4 @@
-import type { CodexTokenUsage } from '#shared/types/event.msg'
+import type { CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 
 export interface CodexSessionListItem {
@@ -33,7 +33,7 @@ export interface CodexSessionThinking {
     call_id?: string
     toolName?: string
     skill?: string
-    content?: string
+    content?: string | CodexEventTokenCountPayload
     tokenUsage?: CodexTokenUsage
     call?: Record<string, unknown>
     output?: {
