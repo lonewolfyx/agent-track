@@ -73,6 +73,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <template
+                                v-for="think in chat.thinking"
+                                :key="think.type"
+                            >
+                                <ChatTokenCount
+                                    v-if="think.type === 'token_count'"
+                                    :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
+                                />
+                            </template>
                         </div>
                     </div>
 
@@ -84,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+import type { CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
 import type { ChatTurnList } from '#shared/types/session'
 
 defineOptions({
