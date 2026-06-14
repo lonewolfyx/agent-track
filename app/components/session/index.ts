@@ -1,5 +1,6 @@
 import type { App } from 'vue'
 import type { AsyncData } from '#app'
+import type { sessionQueryParam } from '#shared/types/session'
 import { createContext } from 'reka-ui'
 import { createApp, defineComponent, h, ref } from 'vue'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
@@ -17,12 +18,7 @@ export { default as SessionTimeLineList } from './SessionTimeLineList.vue'
 
 export const [useSession, useSessionProvider] = createContext<AsyncData<any, any>>('codex-session')
 
-export interface HandleDrawerShowerOptions {
-    title: string
-    id: string
-}
-
-export function handleSessionDetail(options: HandleDrawerShowerOptions) {
+export function handleSessionDetail(options: sessionQueryParam) {
     if (typeof document === 'undefined') {
         return
     }

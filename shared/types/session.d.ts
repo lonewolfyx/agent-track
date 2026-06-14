@@ -1,6 +1,15 @@
 import type { CodexTokenUsage } from '#shared/types/event.msg'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 
+// -------------------
+
+export interface sessionQueryParam {
+    id: string
+    path: string
+}
+
+// -------------------
+
 export interface CodexSessionListItem {
     id: string
     title: string
