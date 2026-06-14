@@ -9,23 +9,7 @@
 
                     <div class="ml-0">
                         <div class="relative">
-                            <div class="relative flex flex-col pl-4 pt-2">
-                                <VerticalLine />
-                                <div class="flex w-max items-center gap-2">
-                                    <div
-                                        class="border border-dashed rounded-full bg-white overflow-hidden cursor-pointer"
-                                    >
-                                        <Button
-                                            class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
-                                            size="sm"
-                                        >
-                                            <Icon class="size-3" name="material-symbols:hexagon-outline" />
-                                            Skill
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="relative flex flex-col pl-4 pt-2">
+                            <div class="relative flex flex-col pl-4 pt-2 hidden">
                                 <VerticalLine />
                                 <div class="flex w-max items-center gap-2">
                                     <div
@@ -41,7 +25,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="relative flex flex-col pl-4 pt-2">
+                            <div class="relative flex flex-col pl-4 pt-2 hidden">
                                 <VerticalLine />
                                 <div class="flex w-max items-center gap-2">
                                     <div
@@ -62,7 +46,14 @@
                                 :key="think.type"
                             >
                                 <ChatThinkingReasoning v-if="think.type === 'reasoning'" />
-                                <ChatThinkingAgentMessage v-if="think.type === 'agent_message'" :payload="think.content as CodexEventAgentMessagePayload" />
+                                <ChatThinkingAgentMessage
+                                    v-if="think.type === 'agent_message'"
+                                    :payload="think.content as CodexEventAgentMessagePayload"
+                                />
+                                <ChatThinkingSkill
+                                    v-if="think.type === 'function_call' && Object.keys(think).includes('skill')"
+                                    :skill="think.skill!"
+                                />
                                 <ChatTokenCount
                                     v-if="think.type === 'token_count'"
                                     :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
@@ -78,7 +69,7 @@
     </TooltipProvider>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { CodexEventAgentMessagePayload, CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
 import type { ChatTurnList } from '#shared/types/session'
 
