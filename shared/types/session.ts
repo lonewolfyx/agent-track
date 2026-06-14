@@ -34,7 +34,7 @@ export interface CodexSessionThinking {
     toolName?: string
     skill?: string
     content?: string
-    tokenUsage?: CodexTokenUsage | null
+    tokenUsage?: CodexTokenUsage
     call?: Record<string, unknown>
     output?: {
         event?: Record<string, unknown>

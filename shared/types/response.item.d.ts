@@ -37,7 +37,7 @@ export interface CodexResponseReasoning {
     type: 'reasoning'
     summary: ReasoningItemReasoningSummary[]
     content?: ReasoningItemContent[]
-    encrypted_content: string | null
+    encrypted_content: string
 }
 
 export interface CodexResponseFunctionCall {
@@ -92,7 +92,7 @@ export interface CodexResponseWebSearchCall {
 
 export interface CodexResponseToolSearchCall {
     type: 'tool_search_call'
-    call_id: string | null
+    call_id: string
     status?: string
     execution: string
     arguments: string
@@ -110,7 +110,7 @@ export interface CodexToolNamespace {
 
 export interface CodexResponseToolSearchOutput {
     type: 'tool_search_output'
-    call_id: string | null
+    call_id: string
     status: string
     execution: string
     tools: unknown[]
@@ -126,17 +126,17 @@ export interface CodexResponseImageGenerationCall {
 
 export interface LocalShellExecAction {
     command: string[]
-    timeout_ms: bigint | null
-    working_directory: string | null
+    timeout_ms: bigint
+    working_directory: string
     env: {
         [key in string]?: string
-    } | null
-    user: string | null
+    }
+    user: string
 }
 
 export interface CodexResponseLocalShellCall {
     type: 'local_shell_call'
-    call_id: string | null
+    call_id: string
     status: 'completed' | 'in_progress' | 'incomplete'
     action: { type: 'exec' } & LocalShellExecAction
 }

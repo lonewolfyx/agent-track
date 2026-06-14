@@ -45,8 +45,8 @@ export interface CodexCollaborationMode {
     mode: CodexModeKind
     settings: {
         model: string
-        reasoning_effort: CodexReasoningEffort | null
-        developer_instructions: string | null
+        reasoning_effort: CodexReasoningEffort
+        developer_instructions: string
     }
 }
 
@@ -71,7 +71,7 @@ export interface CodexFileSystemSandboxEntry {
 
 export interface CodexFileSystemSandboxPolicy {
     kind: string
-    glob_scan_max_depth?: number | null
+    glob_scan_max_depth?: number
     entries: CodexFileSystemSandboxEntry[]
 }
 

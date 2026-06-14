@@ -1,11 +1,11 @@
 export interface CodexGitInfo {
-    commit_hash?: string | null
-    branch?: string | null
-    repository_url?: string | null
+    commit_hash?: string
+    branch?: string
+    repository_url?: string
 }
 
 export interface CodexDynamicToolSpec {
-    namespace?: string | null
+    namespace?: string
     name: string
     description: string
     input_schema: Record<string, unknown>
@@ -14,23 +14,23 @@ export interface CodexDynamicToolSpec {
 
 export interface CodexSessionMetaPayload {
     id: string
-    forked_from_id?: string | null
-    parent_thread_id?: string | null
+    forked_from_id?: string
+    parent_thread_id?: string
     timestamp: string
     cwd: string
     originator: string
     cli_version: string
     source: string | Record<string, unknown>
-    thread_source?: string | null
-    agent_nickname?: string | null
-    agent_role?: string | null
-    agent_path?: string | null
-    model_provider?: string | null
+    thread_source?: string
+    agent_nickname?: string
+    agent_role?: string
+    agent_path?: string
+    model_provider?: string
     base_instructions?: {
         text: string
-    } | null
-    dynamic_tools?: CodexDynamicToolSpec[] | null
-    memory_mode?: string | null
-    multi_agent_version?: string | null
-    git?: CodexGitInfo | null
+    }
+    dynamic_tools?: CodexDynamicToolSpec[]
+    memory_mode?: string
+    multi_agent_version?: string
+    git?: CodexGitInfo
 }
