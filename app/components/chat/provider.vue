@@ -17,6 +17,9 @@ const chat = shallowRef<ChatTurnList>()
 
 useChatProvider({
     idx,
+    onIndexChange: (index: number) => {
+        idx.value = index
+    },
     type,
     thinking,
     chat,

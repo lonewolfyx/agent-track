@@ -3,7 +3,7 @@
         <VerticalLine />
         <Collapsible class="group/collapsible" default-open>
             <CollapsibleTrigger as-child>
-                <ChatQuestion />
+                <ChatQuestion :question="chat.question" />
             </CollapsibleTrigger>
             <CollapsibleContent>
                 <Bezier />
