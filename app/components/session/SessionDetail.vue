@@ -17,7 +17,7 @@
                             >
                                 <ChatSessionMeta :started-at="chat.startedAt" />
                                 <ChatTurnContext :turn-context="chat.turn_context as CodexTurnContextPayload" />
-                                <ChatThinking />
+                                <ChatThinking :chat />
                             </template>
                         </div>
                     </div>
