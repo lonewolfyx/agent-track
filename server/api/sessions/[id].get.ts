@@ -8,7 +8,7 @@ import type {
     CodexEventTurnAbortedPayload,
     CodexUserMessagePayload,
 } from '#shared/types/event.msg'
-import type { CodexResponseFunctionCall, CodexResponseMessage } from '#shared/types/response.item'
+import type { CodexResponseFunctionCall, CodexResponseMcpToolCall, CodexResponseMessage } from '#shared/types/response.item'
 import type { ChatTurnList, CodexSessionThinking } from '#shared/types/session'
 import { readJsonlLines } from '#server/utils/codex'
 
@@ -54,12 +54,15 @@ function resolveToolName(payload: CodexSessionPayload<'event_msg'> | CodexSessio
         case 'custom_tool_call':
             return (payload as CodexSessionPayload<'response_item', 'function_call'> | CodexSessionPayload<'response_item', 'custom_tool_call'>).name
         case 'mcp_tool_call': {
-            const invocation = (payload as CodexResponseMcpToolCall).invocation
+            const invocation = (payload as unknown as CodexResponseMcpToolCall).invocation
             if (invocation) {
                 return [invocation?.server, invocation?.tool].filter(Boolean).join('.')
             }
 
-            return [(payload as CodexResponseMcpToolCall)?.server || '', (payload as CodexResponseMcpToolCall).tool || ''].filter(Boolean).join('.')
+            return [
+                (payload as unknown as CodexResponseMcpToolCall)?.server || '',
+                (payload as unknown as CodexResponseMcpToolCall).tool || '',
+            ].filter(Boolean).join('.')
         }
         case 'dynamic_tool_call_request':
             return (payload as CodexSessionPayload<'event_msg', 'dynamic_tool_call_request'>).tool
@@ -207,22 +210,23 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
         }
 
         if (line.type === 'event_msg' && payloadType === 'task_complete') {
-            currentTurn.answer = (payload as CodexEventTaskCompletePayload).last_agent_message
-            currentTurn.duration = (payload as CodexEventTaskCompletePayload).duration_ms
+            currentTurn.answer = (payload as CodexEventTaskCompletePayload).last_agent_message ?? ''
+            currentTurn.duration = (payload as CodexEventTaskCompletePayload).duration_ms ?? undefined
             currentTurn = null
             continue
         }
 
         if (line.type === 'event_msg' && payloadType === 'turn_aborted') {
-            currentTurn.duration = (payload as CodexEventTurnAbortedPayload).duration_ms
+            currentTurn.duration = (payload as CodexEventTurnAbortedPayload).duration_ms ?? undefined
             currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventTurnAbortedPayload).reason))
             currentTurn = null
             continue
         }
 
         if (line.type === 'event_msg' && payloadType === 'token_count') {
-            if ((payload as CodexEventTokenCountPayload).info) {
-                currentTurn.total_token_usage = (payload as CodexEventTokenCountPayload).info.total_token_usage
+            const info = (payload as CodexEventTokenCountPayload).info
+            if (info) {
+                currentTurn.total_token_usage = info.total_token_usage
                 currentTurn.thinking.push(createContentThinkingItem(line, payload))
                 continue
             }
