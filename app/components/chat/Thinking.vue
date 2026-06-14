@@ -19,22 +19,6 @@
                                             class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
                                             size="sm"
                                         >
-                                            <Icon class="size-3" name="icon-park-twotone:brain" />
-                                            reasoning
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="relative flex flex-col pl-4 pt-2">
-                                <VerticalLine />
-                                <div class="flex w-max items-center gap-2">
-                                    <div
-                                        class="border border-dashed rounded-full bg-white overflow-hidden cursor-pointer"
-                                    >
-                                        <Button
-                                            class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
-                                            size="sm"
-                                        >
                                             <Icon class="size-3" name="material-symbols:hexagon-outline" />
                                             Skill
                                         </Button>
@@ -77,6 +61,7 @@
                                 v-for="think in chat.thinking"
                                 :key="think.type"
                             >
+                                <ChatThinkingReasoning v-if="think.type === 'reasoning'" />
                                 <ChatTokenCount
                                     v-if="think.type === 'token_count'"
                                     :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
