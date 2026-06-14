@@ -18,6 +18,7 @@
                                 <ChatSessionMeta :started-at="chat.startedAt" />
                                 <ChatTurnContext :turn-context="chat.turn_context as CodexTurnContextPayload" />
                                 <ChatThinking :chat />
+                                <ChatTokenCount :token="chat.total_token_usage as CodexTokenUsage" />
                             </template>
                         </div>
                     </div>
@@ -33,6 +34,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { CodexTokenUsage } from '#shared/types/event.msg'
 import type { ChatTurnList, CodexSessionDetail } from '#shared/types/session'
 import type { SessionQueryParam } from '#shared/types/session.query'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
