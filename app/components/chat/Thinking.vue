@@ -9,35 +9,17 @@
 
                     <div class="ml-0">
                         <div class="relative">
-                            <template
+                            <component
+                                :is="componentMap[think.type] ?? ChatThinkingEmpty"
                                 v-for="(think, index) in chat.thinking"
                                 :key="think.type"
-                            >
-                                <ChatThinkingReasoning v-if="think.type === 'reasoning'" />
-
-                                <ChatThinkingAgentMessage
-                                    v-else-if="think.type === 'agent_message'"
-                                    :payload="think.content as CodexEventAgentMessagePayload"
-                                    :index
-                                    :chat-index="idx"
-                                />
-
-                                <ChatThinkingFunctionCall
-                                    v-else-if="think.type === 'function_call'" :think
-                                />
-
-                                <ChatThinkingCustomToolCall
-                                    v-else-if="think.type === 'custom_tool_call'" :think
-                                />
-
-                                <ChatTokenCount
-                                    v-else-if="think.type === 'token_count'"
-                                    :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
-                                />
-                                <template v-else>
-                                    {{ think.type }} need pr report
-                                </template>
-                            </template>
+                                :chat-index="idx"
+                                :index
+                                :think
+                                :payload="think.content as CodexEventAgentMessagePayload"
+                                :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
+                                :type="think.type"
+                            />
                         </div>
                     </div>
 
@@ -49,6 +31,15 @@
 </template>
 
 <script lang="ts" setup>
+import {
+    ChatThinkingAgentMessage,
+    ChatThinkingCustomToolCall,
+    ChatThinkingEmpty,
+    ChatThinkingFunctionCall,
+    ChatThinkingReasoning,
+    ChatTokenCount,
+} from '#components'
+
 defineOptions({
     name: 'ChatThinking',
 })
@@ -57,4 +48,12 @@ defineProps<{
     chat: ChatTurnList
     idx: number
 }>()
+
+const componentMap = {
+    reasoning: ChatThinkingReasoning,
+    agent_message: ChatThinkingAgentMessage,
+    function_call: ChatThinkingFunctionCall,
+    custom_tool_call: ChatThinkingCustomToolCall,
+    token_count: ChatTokenCount,
+} as Partial<Record<CodexPayloadType, Component>>
 </script>
