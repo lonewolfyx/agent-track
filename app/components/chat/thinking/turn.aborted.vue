@@ -8,6 +8,7 @@
             </div>
         </div>
     </div>
+    <Bezier class="transform -scale-x-100" />
 </template>
 
 <script setup lang="ts">
