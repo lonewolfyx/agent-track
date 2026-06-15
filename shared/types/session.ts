@@ -1,5 +1,5 @@
 import type { CodexEventAgentMessagePayload, CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
-import type { CodexResponseReasoning } from '#shared/types/response.item'
+import type { CodexResponseFunctionCall, CodexResponseReasoning } from '#shared/types/response.item'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 
 export interface CodexSessionListItem {
@@ -41,7 +41,7 @@ export interface CodexSessionThinking {
     skill?: string
     content?: ThinkingContent
     tokenUsage?: CodexTokenUsage
-    call?: Record<string, unknown>
+    call?: CodexResponseFunctionCall
     output?: {
         event?: Record<string, unknown>
         response?: Record<string, unknown>
