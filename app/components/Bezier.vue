@@ -1,6 +1,6 @@
 <template>
     <svg
-        class="ml-4 w-auto h-7 text-border" fill="none" viewBox="0 0 27 30"
+        class="bezier ml-4 w-auto h-7 text-border" fill="none" viewBox="0 0 27 30"
         xmlns="http://www.w3.org/2000/svg"
     >
         <g>
