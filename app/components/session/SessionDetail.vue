@@ -27,6 +27,7 @@
                         <span class="text-xl text-red-500/75">No session detail</span>
                     </div>
                 </div>
+                <ChatThinkingDetailResizable />
             </ChatProvider>
         </div>
     </div>
