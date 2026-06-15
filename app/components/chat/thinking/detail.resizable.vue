@@ -50,7 +50,7 @@
                             'cursor-pointer',
                         )" @click="reset"
                     >
-                        <Icon name="material-symbols:close-rounded" class="size-6" />
+                        <Icon class="size-6" name="material-symbols:close-rounded" />
                     </div>
                     <div class="relative h-full overflow-auto p-4">
                         <component
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChatDetailAgentMessage, ChatDetailEmpty } from '#components'
+import { ChatDetailAgentMessage, ChatDetailEmpty, ChatDetailFunctionCall } from '#components'
 import { useChatDetail } from '~/components/chat'
 import { cn } from '~/lib/utils'
 
@@ -79,6 +79,7 @@ const { status, chats, chatIndex, thinkIndex, thinkingType, reset } = useChatDet
 
 const componentMap = {
     agent_message: ChatDetailAgentMessage,
+    function_call: ChatDetailFunctionCall,
 } as Partial<Record<CodexPayloadType, Component>>
 
 const component = computed(() => componentMap[thinkingType.value as CodexPayloadType] ?? ChatDetailEmpty)

@@ -69,6 +69,8 @@ function resolveProps(think: CodexSessionThinking, index: number) {
         default:
             return {
                 think,
+                index,
+                chatIndex: props.idx,
             }
     }
 }

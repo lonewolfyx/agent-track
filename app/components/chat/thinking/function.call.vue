@@ -13,6 +13,7 @@
                     <Button
                         class="bg-transparent hover:bg-transparent text-secondary-foreground text-xs"
                         size="sm"
+                        @click="handleThinkingNode(chatIndex, index, FUNCTION_CALL)"
                     >
                         <Icon class="size-3" name="carbon:function-2" />
                         <div class="flex items-center gap-2 text-mono">
@@ -30,6 +31,8 @@
 
 <script lang="ts" setup>
 import type { CodexSessionThinking } from '#shared/types/session'
+import { FUNCTION_CALL } from '#shared/constant/codex.type'
+import { useChatDetail } from '~/components/chat'
 
 defineOptions({
     name: 'ChatThinkingFunctionCall',
@@ -37,5 +40,9 @@ defineOptions({
 
 defineProps<{
     think: CodexSessionThinking
+    index: number
+    chatIndex: number
 }>()
+
+const { handleThinkingNode } = useChatDetail()
 </script>
