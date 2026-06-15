@@ -11,5 +11,10 @@ defineOptions({
 
 defineProps<{
     type: string
+    // think: CodexSessionThinking
+    // index: number
+    // chatIndex: number
 }>()
+
+// const { handleThinkingNode } = useChatDetail()
 </script>
