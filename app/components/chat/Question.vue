@@ -6,7 +6,7 @@
                     class="bg-white text-secondary-foreground hover:bg-white rounded-full border"
                 >
                     <Icon class="size-4" name="arcticons:ask-ai" />
-                    {{ truncateContent(question) }}
+                    {{ truncateContent(question, 50) }}
                 </Button>
             </CollapsibleTrigger>
         </tooltiptrigger>

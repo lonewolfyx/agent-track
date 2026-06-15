@@ -6,7 +6,7 @@
         )"
     >
         <Icon name="ic:twotone-question-answer" class="size-4" />
-        {{ truncateContent(answer) }}
+        {{ truncateContent(answer, 50) }}
     </Button>
 </template>
 
