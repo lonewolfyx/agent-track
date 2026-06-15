@@ -29,6 +29,8 @@ export interface CodexSessionTypeMap {
     compacted: CodexCompactedPayload
 }
 
+export type CodexPayloadType = keyof CodexEventMsgPayload | keyof CodexResponseItemPayload
+
 type CodexSessionPayloadVariantType = {
     [Type in keyof CodexSessionTypeMap]:
     ValueOf<CodexSessionTypeMap[Type]> extends { type: string }
