@@ -18,12 +18,12 @@
 
             <ResizableHandle
                 id="block-resizable-handle"
-                with-handle
                 :class="cn(
                     'pointer-events-auto relative hidden',
                     'bg-transparent p-0',
                     'after:absolute after:inset-y-0 after:left-1/2 after:w-3 after:-translate-x-1/2 sm:flex sm:w-3',
                 )"
+                with-handle
                 @dragging="isResizing = $event"
             >
                 <div class="z-10 flex h-10 w-1 items-center justify-center rounded-full bg-background" />
@@ -31,21 +31,18 @@
 
             <ResizablePanel
                 :default-size="55"
-                :min-size="20"
                 :max-size="90"
+                :min-size="20"
                 as-child
             >
-                <aside class="pointer-events-auto relative h-full min-h-0 min-w-0 overflow-hidden rounded-xl border bg-background">
-                    <!--                    <div -->
-                    <!--                        :class="cn( -->
-                    <!--                            'absolute inset-0', -->
-                    <!--                            '[background-size:_theme(text.base)__theme(text.base)]', -->
-                    <!--                            '[background-image:radial-gradient(_theme(colors.gray.300)_1px,transparent_1px)]', -->
-                    <!--                        )" -->
-                    <!--                    /> -->
-
-                    <div class="relative flex h-full items-center justify-center p-4 text-center text-sm text-muted-foreground">
-                        Main resizable workspace
+                <aside
+                    class="pointer-events-auto relative h-full min-h-0 min-w-0 overflow-hidden rounded-xl border bg-background"
+                >
+                    <div class="relative h-full overflow-auto p-4">
+                        <component
+                            :is="component"
+                            :think="chatThinking"
+                        />
                     </div>
                 </aside>
             </ResizablePanel>
@@ -53,7 +50,8 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+import { ChatDetailAgentMessage, ChatDetailEmpty } from '#components'
 import { useChatDetail } from '~/components/chat'
 import { cn } from '~/lib/utils'
 
@@ -63,5 +61,15 @@ defineOptions({
 
 const isResizing = ref(false)
 
-const { status } = useChatDetail()
+const { status, chats, chatIndex, thinkIndex, thinkingType } = useChatDetail()
+
+const componentMap = {
+    agent_message: ChatDetailAgentMessage,
+} as const
+
+const component = computed(() => componentMap[thinkingType.value as keyof typeof componentMap] ?? ChatDetailEmpty)
+
+const chatList = computed(() => chats.value[chatIndex.value]!)
+
+const chatThinking = computed(() => chatList.value.thinking[thinkIndex.value]!)
 </script>
