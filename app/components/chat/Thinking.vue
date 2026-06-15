@@ -19,6 +19,7 @@
                                     v-else-if="think.type === 'agent_message'"
                                     :payload="think.content as CodexEventAgentMessagePayload"
                                     :index
+                                    :chat-index="idx"
                                 />
 
                                 <ChatThinkingFunctionCall
@@ -54,5 +55,6 @@ defineOptions({
 
 defineProps<{
     chat: ChatTurnList
+    idx: number
 }>()
 </script>

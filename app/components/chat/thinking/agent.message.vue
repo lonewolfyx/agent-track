@@ -8,7 +8,7 @@
                 <Button
                     class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
                     size="sm"
-                    @click="handleThinkingNode(index, AGENT_MESSAGE)"
+                    @click="handleThinkingNode(chatIndex, index, AGENT_MESSAGE)"
                 >
                     <Icon class="size-3" name="dinkie-icons:thinking-face" />
                     {{ truncateContent(payload.message, 50) }}
@@ -29,6 +29,7 @@ defineOptions({
 defineProps<{
     payload: CodexSessionPayload<'event_msg', 'agent_message'>
     index: number
+    chatIndex: number
 }>()
 
 const { handleThinkingNode } = useChatDetail()
