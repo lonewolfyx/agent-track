@@ -35,7 +35,7 @@
                 :min-size="20"
                 as-child
             >
-                <aside
+                <div
                     :class="cn(
                         'pointer-events-auto relative',
                         'h-full min-h-0 min-w-0 overflow-hidden',
@@ -48,7 +48,7 @@
                             :think="chatThinking"
                         />
                     </div>
-                </aside>
+                </div>
             </ResizablePanel>
         </ResizablePanelGroup>
     </div>
@@ -65,7 +65,7 @@ defineOptions({
 
 const isResizing = ref(false)
 
-const { status, chats, chatIndex, thinkIndex, thinkingType } = useChatDetail()
+const { status, chats, chatIndex, thinkIndex, thinkingType, reset } = useChatDetail()
 
 const componentMap = {
     agent_message: ChatDetailAgentMessage,
