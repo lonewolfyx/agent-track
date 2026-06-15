@@ -43,6 +43,6 @@ defineOptions({
 })
 
 defineProps<{
-    token: CodexTokenUsage
+    token: CodexTokenUsage | null
 }>()
 </script>
