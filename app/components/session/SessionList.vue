@@ -23,7 +23,7 @@
 import { useSession } from '.'
 
 defineOptions({
-    name: 'Session',
+    name: 'SessionList',
 })
 
 const { data: sessions } = useSession()

@@ -52,7 +52,7 @@
                         <main class="grow" role="content">
                             <div class="container w-4xl mx-auto">
                                 <!-- -->
-                                <Session />
+                                <SessionList />
                                 <!-- -->
                             </div>
                         </main>
