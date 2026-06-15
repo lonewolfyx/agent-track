@@ -5,6 +5,6 @@ export interface ChatProviderDetail {
     thinkingType: Ref<string>
     handleThinkingNode: (index: number, thinkingType: string) => void
     thinking: ShallowRef<CodexSessionThinking | undefined>
-    chat: ShallowRef<ChatTurnList | undefined>
+    chats: ShallowRef<ChatTurnList | undefined>
     reset: () => void
 }

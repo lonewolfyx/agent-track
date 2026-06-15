@@ -16,7 +16,7 @@ const chatIdx = ref<number>(0)
 const thinkIdx = ref<number>(0)
 const thinkingType = ref<string>('')
 const thinking = shallowRef<CodexSessionThinking | undefined>(undefined)
-const chat = shallowRef<ChatTurnList | undefined>(undefined)
+const chats = shallowRef<ChatTurnList | undefined>(undefined)
 
 function changeShowBox() {
     if (!status.value) {
@@ -35,7 +35,7 @@ useChatProvider({
         thinkingType.value = type
     },
     thinking,
-    chat,
+    chats,
     reset: () => {
         status.value = false
         thinkIdx.value = 0

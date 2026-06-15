@@ -48,7 +48,7 @@ const props = defineProps<SessionQueryParam>()
 const sessionDetail = ref<ChatTurnList[]>([])
 const hasSessionDetail = computed(() => sessionDetail.value.length > 0)
 
-const { chat } = useChatDetail()
+const { chats } = useChatDetail()
 
 watch(
     () => [props.id, props.path] as const,
@@ -61,7 +61,7 @@ watch(
             signal: controller.signal,
         })
 
-        chat.value = sessionDetail.value = data.value?.chat.filter(item => item.question) ?? []
+        chats.value = sessionDetail.value = data.value?.chat.filter(item => item.question) ?? []
     },
     {
         immediate: true,
