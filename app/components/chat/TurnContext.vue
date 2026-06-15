@@ -33,7 +33,7 @@
                 <span class="font-mono capitalize">{{ turnContext.effort }}</span>
             </div>
         </div>
-        <div class="pl-10 w-px h-4 border-r border-dashed" />
+        <div class="pl-10 w-px h-4 border-r" />
     </div>
 </template>
 
