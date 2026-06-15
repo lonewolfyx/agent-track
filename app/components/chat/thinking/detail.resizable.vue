@@ -36,7 +36,11 @@
                 as-child
             >
                 <aside
-                    class="pointer-events-auto relative h-full min-h-0 min-w-0 overflow-hidden rounded-xl border bg-background"
+                    :class="cn(
+                        'pointer-events-auto relative',
+                        'h-full min-h-0 min-w-0 overflow-hidden',
+                        'rounded-xl border border-dashed bg-background/75 backdrop-blur-sm backdrop-brightness-95',
+                    )"
                 >
                     <div class="relative h-full overflow-auto p-4">
                         <component
