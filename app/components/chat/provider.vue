@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { ChatTurnList, CodexSessionThinking } from '#shared/types/session'
+import type { ChatTurnList } from '#shared/types/session'
 import { useChatProvider } from '.'
 
 defineOptions({
@@ -15,7 +15,6 @@ const status = ref<boolean>(false)
 const chatIdx = ref<number>(0)
 const thinkIdx = ref<number>(0)
 const thinkingType = ref<string>('')
-const thinking = shallowRef<CodexSessionThinking | undefined>(undefined)
 const chats = shallowRef<ChatTurnList | undefined>(undefined)
 
 function changeShowBox() {
@@ -34,7 +33,6 @@ useChatProvider({
         thinkIdx.value = index
         thinkingType.value = type
     },
-    thinking,
     chats,
     reset: () => {
         status.value = false
