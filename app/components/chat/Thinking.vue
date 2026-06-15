@@ -37,6 +37,7 @@ import {
     ChatThinkingEmpty,
     ChatThinkingFunctionCall,
     ChatThinkingReasoning,
+    ChatThinkingTurnAborted,
     ChatTokenCount,
 } from '#components'
 
@@ -55,5 +56,6 @@ const componentMap = {
     function_call: ChatThinkingFunctionCall,
     custom_tool_call: ChatThinkingCustomToolCall,
     token_count: ChatTokenCount,
+    turn_aborted: ChatThinkingTurnAborted,
 } as Partial<Record<CodexPayloadType, Component>>
 </script>
