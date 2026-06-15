@@ -65,9 +65,9 @@ const { status, chats, chatIndex, thinkIndex, thinkingType } = useChatDetail()
 
 const componentMap = {
     agent_message: ChatDetailAgentMessage,
-} as const
+} as Partial<Record<CodexPayloadType, Component>>
 
-const component = computed(() => componentMap[thinkingType.value as keyof typeof componentMap] ?? ChatDetailEmpty)
+const component = computed(() => componentMap[thinkingType.value as CodexPayloadType] ?? ChatDetailEmpty)
 
 const chatList = computed(() => chats.value[chatIndex.value]!)
 

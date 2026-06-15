@@ -14,7 +14,7 @@ const status = ref<boolean>(false)
 
 const chatIndex = ref<number>(0)
 const thinkIndex = ref<number>(0)
-const thinkingType = ref<string>('')
+const thinkingType = ref<CodexPayloadType | string>('')
 const chats = shallowRef<ChatTurnList | undefined>(undefined)
 
 function changeShowBox() {
