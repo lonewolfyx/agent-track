@@ -1,4 +1,4 @@
-import type { CodexSession, CodexSessionItem, CodexSessionPayload } from '#shared/types/codex'
+import type { CodexPayloadType, CodexSession, CodexSessionItem, CodexSessionPayload } from '#shared/types/codex'
 import type {
     CodexEventAgentMessagePayload,
     CodexEventAgentReasoningPayload,
@@ -12,20 +12,20 @@ import type { CodexResponseFunctionCall, CodexResponseMcpToolCall, CodexResponse
 import type { ChatTurnList, CodexSessionThinking } from '#shared/types/session'
 import { readJsonlLines } from '#server/utils/codex'
 
-const EVENT_OUTPUT_TO_CALL_TYPE: Record<string, string> = {
+const EVENT_OUTPUT_TO_CALL_TYPE = {
     exec_command_end: 'function_call',
     patch_apply_end: 'custom_tool_call',
     web_search_end: 'web_search_call',
     mcp_tool_call_end: 'mcp_tool_call',
-}
+} as Record<CodexPayloadType, CodexPayloadType>
 
-const RESPONSE_OUTPUT_TO_CALL_TYPE: Record<string, string> = {
+const RESPONSE_OUTPUT_TO_CALL_TYPE = {
     function_call_output: 'function_call',
     custom_tool_call_output: 'custom_tool_call',
     tool_search_output: 'tool_search_call',
     mcp_tool_call_output: 'mcp_tool_call',
     dynamic_tool_call_response: 'dynamic_tool_call_request',
-}
+} as Record<CodexPayloadType, CodexPayloadType>
 
 const CALL_TYPES = new Set([
     'function_call',
@@ -96,7 +96,7 @@ function createContentThinkingItem(
 
 function createOutputOnlyItem(
     line: CodexSessionItem,
-    callType: string,
+    callType: CodexPayloadType,
     target: 'event' | 'response',
 ): CodexSessionThinking {
     return {
@@ -149,7 +149,7 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
 
     for (const [index, line] of (lines as CodexSessionItem[]).entries()) {
         const payload = line.payload
-        const payloadType = payload.type
+        const payloadType = payload.type as CodexPayloadType
         const nextLine = lines[index + 1]
         const nextPayload = nextLine ? (nextLine as CodexSessionItem).payload : null
         const nextPayloadType = nextLine ? nextPayload.type : ''
