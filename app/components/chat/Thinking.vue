@@ -1,6 +1,6 @@
 <template>
     <TooltipProvider>
-        <div class="relative flex flex-col pl-6 pt-4">
+        <div class="relative flex flex-col pl-6 pt-2">
             <VerticalLine />
             <Collapsible class="group/collapsible" default-open>
                 <ChatQuestion :question="chat.question" />
