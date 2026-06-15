@@ -4,7 +4,7 @@
         :skill="think.skill!"
     />
     <template v-else>
-        <div class="relative flex flex-col pl-4 pt-2">
+        <div class="relative flex flex-col pl-4 pt-4">
             <VerticalLine />
             <div class="flex w-max items-center gap-2">
                 <div
