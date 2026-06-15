@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex flex-col pl-10 pt-4">
+    <div v-if="token" class="relative flex flex-col pl-10 pt-4">
         <VerticalLine />
         <div class="flex items-center gap-2 relative border-l border-input">
             <div class="size-2 border-4 rounded-full -ml-1 -translate-x-[0.5px]" />
