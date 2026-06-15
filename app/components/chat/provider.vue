@@ -10,12 +10,21 @@ defineOptions({
     name: 'ChatProvider',
 })
 
+const status = ref<boolean>(false)
+
 const idx = ref<number>()
 const type = ref<string>()
 const thinking = ref<CodexSessionThinking>()
 const chat = shallowRef<ChatTurnList>()
 
+function changeShowBox() {
+    if (!status.value) {
+        status.value = !status.value
+    }
+}
 useChatProvider({
+    status,
+
     idx,
     onIndexChange: (index: number) => {
         idx.value = index
@@ -25,6 +34,8 @@ useChatProvider({
     chat,
     onTypeChange: (sessionType: string) => {
         type.value = sessionType
+    },
+    reset: () => {
     },
 })
 </script>
