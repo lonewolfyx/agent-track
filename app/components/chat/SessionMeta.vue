@@ -1,6 +1,7 @@
 <template>
     <div class="relative">
-        <div class="flex items-center gap-2 text-sm">
+        <VerticalLine />
+        <div class="flex items-center gap-2 pt-4 text-sm">
             <span
                 :class="cn(
                     'px-3 py-1 rounded-full',
