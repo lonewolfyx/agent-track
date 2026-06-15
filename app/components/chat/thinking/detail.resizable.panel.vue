@@ -8,7 +8,7 @@
     >
         <div
             :class="cn(
-                'absolute -top-2.5 -left-2.5 z-[60]',
+                'absolute -top-3 -right-2.5 z-[60]',
                 'bg-destructive/50 text-destructive',
                 'border rounded-full',
                 'cursor-pointer',
