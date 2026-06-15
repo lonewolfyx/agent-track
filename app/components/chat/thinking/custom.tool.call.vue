@@ -12,7 +12,7 @@
                     <Icon class="size-3" name="flowbite:tools-outline" />
                     <div class="flex items-center gap-2">
                         <span class="text-sky-500 capitalize">custom tool call</span>
-                        <span class="text-muted-foreground">{{ think.toolName }}</span>
+                        <span class="text-muted-foreground">{{ truncateContent(think.toolName!) }}</span>
                     </div>
                 </Button>
             </div>

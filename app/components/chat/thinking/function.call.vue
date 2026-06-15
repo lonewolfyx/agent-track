@@ -17,7 +17,9 @@
                         <Icon class="size-3" name="carbon:function-2" />
                         <div class="flex items-center gap-2 text-mono">
                             <span class="text-green-500 capitalize">{{ think.toolName }}</span>
-                            <span class="text-muted-foreground">{{ JSON.parse(think.call?.arguments!)?.cmd }}</span>
+                            <span class="text-muted-foreground">{{
+                                truncateContent(JSON.parse(think.call?.arguments!)?.cmd || '', 100)
+                            }}</span>
                         </div>
                     </Button>
                 </div>

@@ -10,7 +10,7 @@
                     size="sm"
                 >
                     <Icon class="size-3" name="dinkie-icons:thinking-face" />
-                    {{ payload.message }}
+                    {{ truncateContent(payload.message, 50) }}
                 </Button>
             </div>
         </div>

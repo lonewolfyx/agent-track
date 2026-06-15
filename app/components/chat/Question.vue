@@ -6,7 +6,7 @@
                     class="bg-white text-secondary-foreground hover:bg-white rounded-full border"
                 >
                     <Icon class="size-4" name="arcticons:ask-ai" />
-                    {{ question.length > 20 ? `${question.substring(0, 20)}...` : question }}
+                    {{ truncateContent(question) }}
                 </Button>
             </CollapsibleTrigger>
         </tooltiptrigger>

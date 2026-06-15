@@ -6,7 +6,7 @@
         )"
     >
         <Icon name="ic:twotone-question-answer" class="size-4" />
-        {{ answer.length > 50 ? `${answer.substring(0, 50)}...` : answer }}
+        {{ truncateContent(answer) }}
     </Button>
 </template>
 
