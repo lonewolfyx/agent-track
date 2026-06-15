@@ -1,9 +1,9 @@
 export interface ChatProviderDetail {
-    chatIdx: Ref<number>
-    thinkIdx: Ref<number>
+    chatIndex: Ref<number>
+    thinkIndex: Ref<number>
     status: Ref<boolean>
     thinkingType: Ref<string>
-    handleThinkingNode: (index: number, thinkingType: string) => void
+    handleThinkingNode: (chatIdx: number, thinkIdx: number, type: string) => void
     chats: ShallowRef<ChatTurnList | undefined>
     reset: () => void
 }

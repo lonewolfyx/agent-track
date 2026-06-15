@@ -12,8 +12,8 @@ defineOptions({
 
 const status = ref<boolean>(false)
 
-const chatIdx = ref<number>(0)
-const thinkIdx = ref<number>(0)
+const chatIndex = ref<number>(0)
+const thinkIndex = ref<number>(0)
 const thinkingType = ref<string>('')
 const chats = shallowRef<ChatTurnList | undefined>(undefined)
 
@@ -25,18 +25,19 @@ function changeShowBox() {
 
 useChatProvider({
     status,
-    chatIdx,
-    thinkIdx,
+    chatIndex,
+    thinkIndex,
     thinkingType,
-    handleThinkingNode: (index: number, type: string) => {
+    handleThinkingNode: (chatIdx: number, thinkIdx: number, type: string) => {
         changeShowBox()
-        thinkIdx.value = index
+        chatIndex.value = chatIdx
+        thinkIndex.value = thinkIdx
         thinkingType.value = type
     },
     chats,
     reset: () => {
         status.value = false
-        thinkIdx.value = 0
+        thinkIndex.value = 0
         thinkingType.value = ''
     },
 })
