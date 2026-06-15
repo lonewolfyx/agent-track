@@ -11,7 +11,8 @@
                     <div
                         :class="cn(
                             'select-none min-h-full min-w-full overflow-visible whitespace-nowrap',
-                            '[&_.chat-group:first-child>div:nth-child(1)]:hidden',
+                            '[&_.chat-group:first-child>div:first-child>div:first-child]:hidden',
+                            '[&_.chat-group:first-child>div:first-child>div:nth-child(2)]:pt-0',
                         )"
                     >
                         <ChatGroup
