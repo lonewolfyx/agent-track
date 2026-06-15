@@ -39,7 +39,7 @@ export function handleSessionDetail(options: SessionQueryParam) {
         DrawerContent,
         {
             class: cn(
-                'data-[vaul-drawer-direction=right]:sm:max-w-auto data-[vaul-drawer-direction=right]:w-10/12',
+                'data-[vaul-drawer-direction=right]:sm:max-w-auto data-[vaul-drawer-direction=right]:w-11/12',
                 'rounded-tl-xl mt-20',
                 'overflow-hidden',
                 'border border-input border-r-0 border-b-0 shadow-lg',
