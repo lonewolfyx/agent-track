@@ -5,7 +5,7 @@
     >
         <ResizablePanelGroup
             auto-save-id="session-detail-layout"
-            class="h-full w-full overflow-visible"
+            class="h-full w-full overflow-visible!"
             direction="horizontal"
         >
             <ResizablePanel
@@ -38,10 +38,20 @@
                 <div
                     :class="cn(
                         'pointer-events-auto relative',
-                        'h-full min-h-0 min-w-0 overflow-hidden',
+                        'h-full min-h-0 min-w-0 overflow-visible!',
                         'rounded-xl border border-dashed bg-background/75 backdrop-blur-sm backdrop-brightness-95',
                     )"
                 >
+                    <div
+                        :class="cn(
+                            'absolute -top-2.5 -left-2.5 z-[60]',
+                            'bg-destructive/50 text-destructive',
+                            'border rounded-full',
+                            'cursor-pointer',
+                        )" @click="reset"
+                    >
+                        <Icon name="material-symbols:close-rounded" class="size-6" />
+                    </div>
                     <div class="relative h-full overflow-auto p-4">
                         <component
                             :is="component"
