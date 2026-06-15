@@ -29,7 +29,7 @@ export interface CodexSessionTypeMap {
     compacted: CodexCompactedPayload
 }
 
-export type CodexPayloadType = keyof CodexEventMsgPayload | keyof CodexResponseItemPayload
+export type CodexPayloadType = keyof CodexEventMsgPayload | keyof CodexResponseItemPayload | 'question'
 
 type CodexSessionPayloadVariantType = {
     [Type in keyof CodexSessionTypeMap]:

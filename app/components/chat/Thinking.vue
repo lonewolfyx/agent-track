@@ -3,7 +3,11 @@
         <div class="relative flex flex-col pl-6 pt-2">
             <VerticalLine />
             <Collapsible class="group/collapsible" default-open>
-                <ChatQuestion :question="chat.question" />
+                <ChatQuestion
+                    :question="chat.question"
+                    :index="idx"
+                    :chat-index="idx"
+                />
                 <CollapsibleContent>
                     <Bezier />
 
