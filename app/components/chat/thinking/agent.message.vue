@@ -8,6 +8,7 @@
                 <Button
                     class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
                     size="sm"
+                    @click="handleThinkingNode(index, AGENT_MESSAGE)"
                 >
                     <Icon class="size-3" name="dinkie-icons:thinking-face" />
                     {{ truncateContent(payload.message, 50) }}
@@ -18,11 +19,17 @@
 </template>
 
 <script setup lang="ts">
+import { AGENT_MESSAGE } from '#shared/constant/codex.type'
+import { useChatDetail } from '~/components/chat'
+
 defineOptions({
     name: 'ChatThinkingAgentMessage',
 })
 
 defineProps<{
     payload: CodexSessionPayload<'event_msg', 'agent_message'>
+    index: number
 }>()
+
+const { handleThinkingNode } = useChatDetail()
 </script>

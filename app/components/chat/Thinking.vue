@@ -10,7 +10,7 @@
                     <div class="ml-0">
                         <div class="relative">
                             <template
-                                v-for="think in chat.thinking"
+                                v-for="(think, index) in chat.thinking"
                                 :key="think.type"
                             >
                                 <ChatThinkingReasoning v-if="think.type === 'reasoning'" />
@@ -18,6 +18,7 @@
                                 <ChatThinkingAgentMessage
                                     v-else-if="think.type === 'agent_message'"
                                     :payload="think.content as CodexEventAgentMessagePayload"
+                                    :index
                                 />
 
                                 <ChatThinkingFunctionCall
