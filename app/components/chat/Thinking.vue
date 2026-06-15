@@ -16,22 +16,25 @@
                                 <ChatThinkingReasoning v-if="think.type === 'reasoning'" />
 
                                 <ChatThinkingAgentMessage
-                                    v-if="think.type === 'agent_message'"
+                                    v-else-if="think.type === 'agent_message'"
                                     :payload="think.content as CodexEventAgentMessagePayload"
                                 />
 
                                 <ChatThinkingFunctionCall
-                                    v-if="think.type === 'function_call'" :think
+                                    v-else-if="think.type === 'function_call'" :think
                                 />
 
                                 <ChatThinkingCustomToolCall
-                                    v-if="think.type === 'custom_tool_call'" :think
+                                    v-else-if="think.type === 'custom_tool_call'" :think
                                 />
 
                                 <ChatTokenCount
-                                    v-if="think.type === 'token_count'"
+                                    v-else-if="think.type === 'token_count'"
                                     :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
                                 />
+                                <template v-else>
+                                    {{ think.type }} need pr report
+                                </template>
                             </template>
                         </div>
                     </div>
