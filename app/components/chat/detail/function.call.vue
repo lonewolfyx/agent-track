@@ -4,7 +4,7 @@
             <div class="flex items-center justify-between">
                 <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">{{ title }}</span>
             </div>
-            <pre class="whitespace-pre-wrap wrap-break-word rounded bg-muted/50 p-2 font-mono text-xs text-muted-foreground">{{ context }}</pre>
+            <CodePreview>{{ context }}</codepreview>
         </div>
     </DefineTemplate>
     <div class="flex flex-col gap-6">
