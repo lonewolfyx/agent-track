@@ -36,6 +36,7 @@ import type { CodexTokenUsage } from '#shared/types/event.msg'
 import type { ChatTurnList, CodexSessionDetail } from '#shared/types/session'
 import type { SessionQueryParam } from '#shared/types/session.query'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
+import { useChatDetail } from '~/components/chat'
 
 defineOptions({
     name: 'SessionDetail',
@@ -45,6 +46,8 @@ const props = defineProps<SessionQueryParam>()
 
 const sessionDetail = ref<ChatTurnList[]>([])
 const hasSessionDetail = computed(() => sessionDetail.value.length > 0)
+
+const { chat } = useChatDetail()
 
 watch(
     () => [props.id, props.path] as const,
@@ -57,7 +60,7 @@ watch(
             signal: controller.signal,
         })
 
-        sessionDetail.value = data.value?.chat.filter(item => item.question) ?? []
+        chat.value = sessionDetail.value = data.value?.chat.filter(item => item.question) ?? []
     },
     {
         immediate: true,
