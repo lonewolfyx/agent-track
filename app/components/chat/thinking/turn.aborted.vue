@@ -15,4 +15,10 @@
 defineOptions({
     name: 'ChatThinkingTurnAborted',
 })
+
+defineProps<{
+    think: CodexSessionThinking
+    index: number
+    chatIndex: number
+}>()
 </script>
