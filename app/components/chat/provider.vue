@@ -26,6 +26,7 @@ function changeShowBox() {
 useChatProvider({
     status,
     idx,
+    thinkingType,
     handleThinkingNode: (index: number, type: string) => {
         changeShowBox()
         idx.value = index
