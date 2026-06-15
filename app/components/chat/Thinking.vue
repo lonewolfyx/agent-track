@@ -26,7 +26,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { CodexSessionThinking } from '#shared/types/session'
 import {
     ChatThinkingAgentMessage,
     ChatThinkingCustomToolCall,
