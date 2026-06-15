@@ -10,9 +10,9 @@
                 <div v-if="hasSessionDetail" class="p-4">
                     <div class="select-none min-h-full min-w-full overflow-visible whitespace-nowrap">
                         <ChatThinkingProvider
-                            v-for="item in sessionDetail"
+                            v-for="(item, idx) in sessionDetail"
                             :key="item.id"
-                            :chat="item"
+                            :idx
                         >
                             <ChatSessionMeta :started-at="item.startedAt" />
                             <ChatTurnContext :turn-context="item.turn_context as CodexTurnContextPayload" />
