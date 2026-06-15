@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex flex-col">
+    <div class="relative flex flex-col chat-group">
         <slot />
     </div>
 </template>
