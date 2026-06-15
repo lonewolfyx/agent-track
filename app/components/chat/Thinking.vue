@@ -13,12 +13,7 @@
                                 :is="componentMap[think.type] ?? ChatThinkingEmpty"
                                 v-for="(think, index) in chat.thinking"
                                 :key="think.type"
-                                :chat-index="idx"
-                                :index
-                                :think
-                                :payload="think.content as CodexEventAgentMessagePayload"
-                                :token="(think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage"
-                                :type="think.type"
+                                v-bind="resolveProps(think, index)"
                             />
                         </div>
                     </div>
@@ -31,6 +26,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { CodexSessionThinking } from '#shared/types/session'
 import {
     ChatThinkingAgentMessage,
     ChatThinkingCustomToolCall,
@@ -45,7 +41,7 @@ defineOptions({
     name: 'ChatThinking',
 })
 
-defineProps<{
+const props = defineProps<{
     chat: ChatTurnList
     idx: number
 }>()
@@ -58,4 +54,23 @@ const componentMap = {
     token_count: ChatTokenCount,
     turn_aborted: ChatThinkingTurnAborted,
 } as Partial<Record<CodexPayloadType, Component>>
+
+function resolveProps(think: CodexSessionThinking, index: number) {
+    switch (think.type) {
+        case 'agent_message':
+            return {
+                index,
+                payload: think.content as CodexEventAgentMessagePayload,
+                chatIndex: props.idx,
+            }
+        case 'token_count':
+            return {
+                token: (think?.content as CodexEventTokenCountPayload)?.info?.total_token_usage as CodexTokenUsage,
+            }
+        default:
+            return {
+                think,
+            }
+    }
+}
 </script>
