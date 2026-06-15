@@ -10,9 +10,9 @@ defineOptions({
 })
 
 const props = defineProps<{
-    chat: ChatTurnList
+    idx: number
 }>()
 
-const { thinking } = useChatDetail()
-thinking.value = props.chat.thinking
+const { chatIdx } = useChatDetail()
+chatIdx.value = props.idx
 </script>
