@@ -1,6 +1,15 @@
 import type { CodexPayloadType } from '#shared/types/codex'
-import type { CodexEventAgentMessagePayload, CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
-import type { CodexResponseFunctionCall, CodexResponseReasoning } from '#shared/types/response.item'
+import type {
+    CodexEventAgentMessagePayload,
+    CodexEventPatchApplyEndPayload,
+    CodexEventTokenCountPayload,
+    CodexTokenUsage,
+} from '#shared/types/event.msg'
+import type {
+    CodexResponseCustomToolCall,
+    CodexResponseFunctionCall,
+    CodexResponseReasoning,
+} from '#shared/types/response.item'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 
 export interface CodexSessionListItem {
@@ -42,9 +51,9 @@ export interface CodexSessionThinking {
     skill?: string
     content?: ThinkingContent
     tokenUsage?: CodexTokenUsage
-    call?: CodexResponseFunctionCall
+    call?: CodexResponseFunctionCall | CodexResponseCustomToolCall
     output?: {
-        event?: Record<string, unknown>
+        event?: CodexEventPatchApplyEndPayload
         response?: Record<string, unknown>
     }
     payload?: Record<string, unknown>

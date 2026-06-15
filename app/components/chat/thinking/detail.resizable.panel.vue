@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChatDetailAgentMessage, ChatDetailEmpty, ChatDetailFunctionCall } from '#components'
+import { ChatDetailAgentMessage, ChatDetailCustomToolCall, ChatDetailEmpty, ChatDetailFunctionCall } from '#components'
 import { useChatDetail } from '~/components/chat'
 import { cn } from '~/lib/utils'
 
@@ -39,6 +39,7 @@ const { chats, chatIndex, thinkIndex, thinkingType, reset } = useChatDetail()
 const componentMap = {
     agent_message: ChatDetailAgentMessage,
     function_call: ChatDetailFunctionCall,
+    custom_tool_call: ChatDetailCustomToolCall,
 } as Partial<Record<CodexPayloadType, Component>>
 
 const component = computed(() => componentMap[thinkingType.value as CodexPayloadType] ?? ChatDetailEmpty)

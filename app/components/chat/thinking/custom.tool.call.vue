@@ -8,6 +8,7 @@
                 <Button
                     class="bg-transparent hover:bg-transparent text-secondary-foreground text-xs"
                     size="sm"
+                    @click="handleThinkingNode(chatIndex, index, CUSTOM_TOOL_CALL)"
                 >
                     <Icon class="size-3" name="flowbite:tools-outline" />
                     <div class="flex items-center gap-2">
@@ -21,11 +22,18 @@
 </template>
 
 <script setup lang="ts">
+import { CUSTOM_TOOL_CALL } from '#shared/constant/codex.type'
+import { useChatDetail } from '~/components/chat'
+
 defineOptions({
     name: 'ChatThinkingCustomToolCall',
 })
 
 defineProps<{
     think: CodexSessionThinking
+    index: number
+    chatIndex: number
 }>()
+
+const { handleThinkingNode } = useChatDetail()
 </script>
