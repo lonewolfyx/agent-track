@@ -9,16 +9,15 @@
             <div class="h-full overflow-auto">
                 <div v-if="hasSessionDetail" class="p-4">
                     <div class="select-none min-h-full min-w-full overflow-visible whitespace-nowrap">
-                        <ChatThinkingProvider
+                        <template
                             v-for="(item, idx) in sessionDetail"
                             :key="item.id"
-                            :idx
                         >
                             <ChatSessionMeta :started-at="item.startedAt" />
                             <ChatTurnContext :turn-context="item.turn_context as CodexTurnContextPayload" />
-                            <ChatThinking :chat="item" />
+                            <ChatThinking :chat="item" :idx />
                             <ChatTokenCount :token="item.total_token_usage as CodexTokenUsage" />
-                        </ChatThinkingProvider>
+                        </template>
                     </div>
                 </div>
                 <div v-else class="flex h-full flex-col items-center justify-center gap-3">
