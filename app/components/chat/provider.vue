@@ -13,7 +13,7 @@ defineOptions({
 const status = ref<boolean>(false)
 
 const idx = ref<number>(0)
-const type = ref<string>()
+const thinkingType = ref<string>('')
 const thinking = shallowRef<CodexSessionThinking | undefined>(undefined)
 const chat = shallowRef<ChatTurnList | undefined>(undefined)
 
@@ -26,15 +26,17 @@ function changeShowBox() {
 useChatProvider({
     status,
     idx,
-    handleThinkingNode: (index: number) => {
+    handleThinkingNode: (index: number, type: string) => {
         changeShowBox()
         idx.value = index
+        thinkingType.value = type
     },
     thinking,
     chat,
     reset: () => {
         status.value = false
         idx.value = 0
+        thinkingType.value = ''
     },
 })
 </script>
