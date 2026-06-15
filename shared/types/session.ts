@@ -1,3 +1,4 @@
+import type { CodexPayloadType } from '#shared/types/codex'
 import type { CodexEventAgentMessagePayload, CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
 import type { CodexResponseFunctionCall, CodexResponseReasoning } from '#shared/types/response.item'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
@@ -31,7 +32,7 @@ export type ThinkingContent = string
     | CodexResponseReasoning
 
 export interface CodexSessionThinking {
-    type: string
+    type: CodexPayloadType
     timestamp: string
     phase?: string
     role?: string
