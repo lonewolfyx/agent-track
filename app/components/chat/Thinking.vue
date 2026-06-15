@@ -47,10 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { CodexEventAgentMessagePayload, CodexEventTokenCountPayload, CodexTokenUsage } from '#shared/types/event.msg'
-import type { ChatTurnList } from '#shared/types/session'
-import ChatThinkingFunctionCall from '~/components/chat/thinking/function.call.vue'
-
 defineOptions({
     name: 'ChatThinking',
 })
