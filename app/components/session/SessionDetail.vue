@@ -6,29 +6,27 @@
         </DrawerHeader>
 
         <div class="relative z-30 h-full w-full overflow-hidden">
-            <ChatProvider>
-                <div class="h-full overflow-auto">
-                    <div v-if="hasSessionDetail" class="p-4">
-                        <div class="select-none min-h-full min-w-full overflow-visible whitespace-nowrap">
-                            <template
-                                v-for="chat in sessionDetail"
-                                :key="chat.id"
-                            >
-                                <ChatSessionMeta :started-at="chat.startedAt" />
-                                <ChatTurnContext :turn-context="chat.turn_context as CodexTurnContextPayload" />
-                                <ChatThinking :chat />
-                                <ChatTokenCount :token="chat.total_token_usage as CodexTokenUsage" />
-                            </template>
-                        </div>
-                    </div>
-                    <div v-else class="flex h-full flex-col items-center justify-center gap-3">
-                        <Icon name="mynaui:danger-hexagon" class="size-12 text-red-500" />
-                        <span class="text-sm">Session Id: {{ id }}</span>
-                        <span class="text-xl text-red-500/75">No session detail</span>
+            <div class="h-full overflow-auto">
+                <div v-if="hasSessionDetail" class="p-4">
+                    <div class="select-none min-h-full min-w-full overflow-visible whitespace-nowrap">
+                        <template
+                            v-for="chat in sessionDetail"
+                            :key="chat.id"
+                        >
+                            <ChatSessionMeta :started-at="chat.startedAt" />
+                            <ChatTurnContext :turn-context="chat.turn_context as CodexTurnContextPayload" />
+                            <ChatThinking :chat />
+                            <ChatTokenCount :token="chat.total_token_usage as CodexTokenUsage" />
+                        </template>
                     </div>
                 </div>
-                <ChatThinkingDetailResizable />
-            </ChatProvider>
+                <div v-else class="flex h-full flex-col items-center justify-center gap-3">
+                    <Icon name="mynaui:danger-hexagon" class="size-12 text-red-500" />
+                    <span class="text-sm">Session Id: {{ id }}</span>
+                    <span class="text-xl text-red-500/75">No session detail</span>
+                </div>
+            </div>
+            <ChatThinkingDetailResizable />
         </div>
     </div>
 </template>
