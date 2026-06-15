@@ -8,7 +8,12 @@
         <div class="relative z-30 h-full w-full overflow-hidden">
             <div class="h-full overflow-auto">
                 <div v-if="hasSessionDetail" class="p-4">
-                    <div class="select-none min-h-full min-w-full overflow-visible whitespace-nowrap">
+                    <div
+                        :class="cn(
+                            'select-none min-h-full min-w-full overflow-visible whitespace-nowrap',
+                            '[&_.chat-group:first-child>div:nth-child(1)]:hidden',
+                        )"
+                    >
                         <ChatGroup
                             v-for="(item, idx) in sessionDetail"
                             :key="item.id"
@@ -37,6 +42,7 @@ import type { ChatTurnList, CodexSessionDetail } from '#shared/types/session'
 import type { SessionQueryParam } from '#shared/types/session.query'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 import { useChatDetail } from '~/components/chat'
+import { cn } from '~/lib/utils'
 
 defineOptions({
     name: 'SessionDetail',
