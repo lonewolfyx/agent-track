@@ -6,9 +6,9 @@ import type {
     CodexEventWebSearchEndPayload,
     CodexTokenUsage,
 } from '#shared/types/event.msg'
+import type { CodexResponseFunctionCall } from '#shared/types/function.call'
 import type {
     CodexResponseCustomToolCall,
-    CodexResponseFunctionCall,
     CodexResponseReasoning,
     CodexResponseWebSearchCall,
 } from '#shared/types/response.item'

@@ -1,4 +1,5 @@
 import type { CodexWebSearchAction } from '#shared/types/event.msg'
+import type { CodexResponseFunctionCall } from '#shared/types/function.call'
 import type { MessagePhase } from '#shared/types/message.phase'
 
 export type ContentItem
@@ -38,14 +39,6 @@ export interface CodexResponseReasoning {
     summary: ReasoningItemReasoningSummary[]
     content?: ReasoningItemContent[]
     encrypted_content: string
-}
-
-export interface CodexResponseFunctionCall {
-    type: 'function_call'
-    name: string
-    arguments: string
-    call_id: string
-    namespace?: string
 }
 
 export type FunctionCallOutputContentItem
