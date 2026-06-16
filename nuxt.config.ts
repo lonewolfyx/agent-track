@@ -67,6 +67,18 @@ export default defineNuxtConfig({
         ],
     },
 
+    nitro: {
+        experimental: {
+            websocket: true,
+        },
+        output: {
+            dir: 'dist',
+        },
+        preset: 'node',
+        serveStatic: 'node',
+        sourceMap: false,
+    },
+
     eslint: {
         config: {
             stylistic: {
