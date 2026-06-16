@@ -4,6 +4,7 @@ import { basename, resolve } from 'node:path'
 import dayjs from 'dayjs'
 import { glob } from 'glob'
 import { readJsonlLines } from '#server/utils/codex'
+import { truncateContent } from '#shared/utils/formatters'
 
 export default defineEventHandler(async () => {
     const config = useRuntimeConfig()
@@ -27,7 +28,7 @@ export default defineEventHandler(async () => {
 
         return {
             id: metaPayload.id,
-            title: title?.payload.message || '',
+            title: truncateContent(title?.payload.message || '', 200),
             model: [
                 ...new Map(
                     model.map(m => [
