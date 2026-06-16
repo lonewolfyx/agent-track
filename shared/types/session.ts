@@ -3,12 +3,14 @@ import type {
     CodexEventAgentMessagePayload,
     CodexEventPatchApplyEndPayload,
     CodexEventTokenCountPayload,
+    CodexEventWebSearchEndPayload,
     CodexTokenUsage,
 } from '#shared/types/event.msg'
 import type {
     CodexResponseCustomToolCall,
     CodexResponseFunctionCall,
     CodexResponseReasoning,
+    CodexResponseWebSearchCall,
 } from '#shared/types/response.item'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
 
@@ -51,9 +53,9 @@ export interface CodexSessionThinking {
     skill?: string
     content?: ThinkingContent
     tokenUsage?: CodexTokenUsage
-    call?: CodexResponseFunctionCall | CodexResponseCustomToolCall
+    call?: CodexResponseFunctionCall | CodexResponseCustomToolCall | CodexResponseWebSearchCall
     output?: {
-        event?: CodexEventPatchApplyEndPayload
+        event?: CodexEventPatchApplyEndPayload | CodexEventWebSearchEndPayload
         response?: Record<string, unknown>
     }
     payload?: Record<string, unknown>
