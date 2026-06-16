@@ -28,13 +28,14 @@
     "scripts": {
         "build": "nuxt build && tsdown && rimraf ./dist/nitro.json",
         "dev": "nuxt dev",
+        "dev:cli": "tsdown -w",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "postinstall": "nuxt prepare",
         "typecheck": "nuxt typecheck",
-        "lint": "eslint .",
-        "lint:fix": "eslint --fix",
-        "prepare": "simple-git-hooks"
+        "lint": "nuxt prepare && eslint .",
+        "lint:fix": "nuxt prepare && eslint --fix",
+        "prepare": "simple-git-hooks",
+        "prepublishOnly": "pnpm build"
     },
     "dependencies": {
         "@clack/prompts": "^1.5.1",
