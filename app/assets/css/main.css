@@ -118,15 +118,15 @@
         @apply border-border outline-ring/50;
     }
 
-    html{
+    html {
         @apply h-full;
     }
 
     body {
-        @apply text-foreground flex h-full text-base antialiased overflow-hidden bg-muted;
+        @apply text-foreground flex h-full text-base antialiased overflow-hidden bg-muted scroll-smooth motion-safe:scroll-smooth;
     }
 
-    #__nuxt{
+    #__nuxt {
         @apply flex grow;
     }
 }

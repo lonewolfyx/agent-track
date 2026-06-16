@@ -6,15 +6,30 @@ import type { ValueOf } from '#shared/types/utils'
 
 export interface CodexCompactedPayload {
     message: string
+    replacement_history?: Array<ValueOf<CodexResponseItemPayload>> | null
+    window_id?: number | null
 }
 
+export interface CodexInterAgentCommunicationPayload {
+    author: string
+    recipient: string
+    other_recipients: string[]
+    content: string
+    encrypted_content?: string | null
+    trigger_turn: boolean
+}
+
+// https://github.com/openai/codex/blob/main/codex-rs/protocol/src/protocol.rs#L2910
 export interface CodexSessionTypeMap {
     session_meta: CodexSessionMetaPayload
     event_msg: CodexEventMsgPayload
     response_item: CodexResponseItemPayload
+    inter_agent_communication: CodexInterAgentCommunicationPayload
     turn_context: CodexTurnContextPayload
     compacted: CodexCompactedPayload
 }
+
+export type CodexPayloadType = keyof CodexEventMsgPayload | keyof CodexResponseItemPayload | 'question'
 
 type CodexSessionPayloadVariantType = {
     [Type in keyof CodexSessionTypeMap]:
@@ -28,7 +43,7 @@ type CodexSessionPayloadKey<Type extends keyof CodexSessionTypeMap>
         ? keyof CodexSessionTypeMap[Type]
         : never
 
-type CodexSessionPayload<
+export type CodexSessionPayload<
     Type extends keyof CodexSessionTypeMap,
     SessionPayload extends CodexSessionPayloadKey<Type> | undefined = undefined,
 > = SessionPayload extends CodexSessionPayloadKey<Type>

@@ -1,3 +1,17 @@
+import type { CodexPayloadType } from '#shared/types/codex'
+import type {
+    CodexEventAgentMessagePayload,
+    CodexEventPatchApplyEndPayload,
+    CodexEventTokenCountPayload,
+    CodexTokenUsage,
+} from '#shared/types/event.msg'
+import type {
+    CodexResponseCustomToolCall,
+    CodexResponseFunctionCall,
+    CodexResponseReasoning,
+} from '#shared/types/response.item'
+import type { CodexTurnContextPayload } from '#shared/types/turn.context'
+
 export interface CodexSessionListItem {
     id: string
     title: string
@@ -10,6 +24,8 @@ export interface CodexSessionListItem {
     prompt: number
     call: number
     createTime: string
+    token: CodexTokenUsage
+    skills: number
 }
 
 export interface CodexSessionMonthGroup {
@@ -17,121 +33,46 @@ export interface CodexSessionMonthGroup {
     children: CodexSessionListItem[]
 }
 
-export type CodexSessionTurnStatus = 'completed' | 'aborted' | 'running'
+// -------------------
 
-export type CodexSessionToolKind = 'function' | 'custom' | 'mcp' | 'web_search' | 'tool_search'
+export type ThinkingContent = string
+    | CodexEventAgentMessagePayload
+    | CodexEventTokenCountPayload
+    | CodexResponseReasoning
 
-export type CodexSessionWorkflowNodeKind
-    = 'task_started'
-        | 'user_message'
-        | 'thought'
-        | 'commentary'
-        | 'tool_call'
-        | 'tool_result'
-        | 'assistant_answer'
-        | 'error'
-        | 'task_complete'
-        | 'turn_aborted'
-
-export type CodexSessionWorkflowEdgeRelation = 'next' | 'result'
-
-export type CodexSessionChatEventType = '提问' | '思考' | '过程' | '工具调用' | '工具返回' | '回答' | '异常'
-
-export interface CodexSessionChatItem {
-    id: string
-    turnId: string
+export interface CodexSessionThinking {
+    type: CodexPayloadType
     timestamp: string
-    type: CodexSessionChatEventType
-    title?: string
-    content?: string
-    source?: 'reasoning' | 'agent_reasoning'
-    toolKind?: CodexSessionToolKind
+    phase?: string
+    role?: string
+    isGuidance?: boolean
+    call_id?: string
     toolName?: string
-    callId?: string
-    status?: string
+    skill?: string
+    content?: ThinkingContent
+    tokenUsage?: CodexTokenUsage
+    call?: CodexResponseFunctionCall | CodexResponseCustomToolCall
+    output?: {
+        event?: CodexEventPatchApplyEndPayload
+        response?: Record<string, unknown>
+    }
+    payload?: Record<string, unknown>
+    pairedPayload?: Record<string, unknown>
 }
 
-export interface CodexSessionToolUsageItem {
+export interface ChatTurnList {
     id: string
-    turnId: string
-    timestamp: string
-    kind: CodexSessionToolKind
-    name: string
-    callId?: string
-    status?: string
-    input?: string
-    output?: string
-    summary?: string
-}
-
-export interface CodexSessionToolSummaryItem {
-    kind: CodexSessionToolKind
-    name: string
-    count: number
-    turns: string[]
-}
-
-export interface CodexSessionThoughtItem {
-    id: string
-    turnId: string
-    timestamp: string
-    source: 'reasoning' | 'agent_reasoning'
-    content: string
-}
-
-export interface CodexSessionWorkflowNode {
-    id: string
-    turnId: string
-    timestamp: string
-    kind: CodexSessionWorkflowNodeKind
-    title: string
-    content?: string
-    callId?: string
-    toolName?: string
-    status?: string
-}
-
-export interface CodexSessionWorkflowEdge {
-    source: string
-    target: string
-    relation: CodexSessionWorkflowEdgeRelation
-}
-
-export interface CodexSessionWorkflowGraph {
-    nodes: CodexSessionWorkflowNode[]
-    edges: CodexSessionWorkflowEdge[]
-}
-
-export interface CodexSessionSkillItem {
-    name: string
-    source: 'assistant_message' | 'user_message'
-}
-
-export interface CodexSessionTurnDetail {
-    turnId: string
-    status: CodexSessionTurnStatus
     startedAt: string
-    completedAt?: string
-    quester: string
+    turn_context: object | CodexTurnContextPayload
+    question: string
     answer: string
-    chat: CodexSessionChatItem[]
-    tools: CodexSessionToolUsageItem[]
-    thoughts: CodexSessionThoughtItem[]
-    workflow: CodexSessionWorkflowGraph
+    total_token_usage: CodexTokenUsage | null
+    thinking: CodexSessionThinking[]
+    duration?: number
 }
 
 export interface CodexSessionDetail {
-    chat: CodexSessionChatItem[][]
-    // turnCount: number
-    // summary: {
-    //     chatCount: number
-    //     toolCount: number
-    //     thoughtCount: number
-    // }
-    // tools: CodexSessionToolSummaryItem[]
-    // skills: CodexSessionSkillItem[]
-    // availableSkills: string[]
-    // thoughts: CodexSessionThoughtItem[]
-    // turns: CodexSessionTurnDetail[]
-    // workflow: CodexSessionWorkflowGraph
+    id: string
+    path: string
+    chat: ChatTurnList[]
 }

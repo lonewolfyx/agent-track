@@ -1,24 +1,9 @@
 import type { CodexSession } from '#shared/types/codex'
 import type { CodexSessionListItem, CodexSessionMonthGroup } from '#shared/types/session'
 import { basename, resolve } from 'node:path'
+import dayjs from 'dayjs'
 import { glob } from 'glob'
 import { readJsonlLines } from '#server/utils/codex'
-
-function getSessionMonthLabel(createTime: string) {
-    const matchedDate = createTime.match(/^(\d{4})-(\d{1,2})/)
-
-    if (matchedDate) {
-        return `${matchedDate[1]}-${Number(matchedDate[2])}`
-    }
-
-    const date = new Date(createTime)
-
-    if (Number.isNaN(date.getTime())) {
-        return '未知时间'
-    }
-
-    return `${date.getFullYear()}-${date.getMonth() + 1}`
-}
 
 export default defineEventHandler(async () => {
     const config = useRuntimeConfig()
@@ -38,7 +23,7 @@ export default defineEventHandler(async () => {
 
         const title = lines.filter(line => line.type === 'event_msg' && line.payload.type === 'user_message')[0]! as CodexSession<'event_msg', 'user_message'>
 
-        const { prompt, call } = parseSessionMetrics(lines)
+        const { prompt, call, token, skills } = parseSessionMetrics(lines)
 
         return {
             id: metaPayload.id,
@@ -49,7 +34,7 @@ export default defineEventHandler(async () => {
                         m.payload.model,
                         {
                             model: m.payload.model,
-                            effort: m.payload.effort,
+                            effort: m.payload.effort ?? undefined,
                         },
                     ]),
                 ).values(),
@@ -59,13 +44,15 @@ export default defineEventHandler(async () => {
             createTime: metaPayload.timestamp,
             cwd: resolve(filePath),
             filename: basename(filePath),
+            token,
+            skills: skills ?? 0,
         }
     }))
 
     sessions.sort((a, b) => b.createTime.localeCompare(a.createTime))
 
     return sessions.reduce<CodexSessionMonthGroup[]>((groups, session) => {
-        const label = getSessionMonthLabel(session.createTime)
+        const label = dayjs(session.createTime).format('YYYY-MM')
         const previousGroup = groups.at(-1)
 
         if (!previousGroup || previousGroup.label !== label) {
