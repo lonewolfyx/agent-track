@@ -17,7 +17,7 @@
                 path: session.cwd,
             })"
         >
-            <div class="min-w-0 flex-1">
+            <div class="relative min-w-0 flex-1 wrap-break-word">
                 <Badge
                     class="bg-blue-500/10 text-secondary-foreground dark:bg-blue-600"
                     variant="secondary"
