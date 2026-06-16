@@ -22,7 +22,11 @@
                         </div>
                     </div>
 
-                    <ChatAnswer :answer="chat.answer" />
+                    <ChatAnswer
+                        :answer="chat.answer"
+                        :index="idx"
+                        :chat-index="idx"
+                    />
                 </CollapsibleContent>
             </Collapsible>
         </div>

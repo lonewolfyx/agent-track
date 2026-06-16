@@ -28,6 +28,7 @@
 <script setup lang="ts">
 import {
     ChatDetailAgentMessage,
+    ChatDetailAnswer,
     ChatDetailCustomToolCall,
     ChatDetailEmpty,
     ChatDetailFunctionCall,
@@ -48,6 +49,7 @@ const componentMap = {
     function_call: ChatDetailFunctionCall,
     custom_tool_call: ChatDetailCustomToolCall,
     question: ChatDetailQuestion,
+    answer: ChatDetailAnswer,
     web_search_call: ChatDetailWebSearchCall,
 } as Partial<Record<CodexPayloadType, Component>>
 
