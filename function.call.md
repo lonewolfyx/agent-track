@@ -7,6 +7,17 @@ This note answers two questions:
 
 Important: on the wire, `arguments` is always a JSON string, not an already-parsed object.
 
+Also important: in this file, many fields look like `string`, but they do not all mean the same thing. Some are:
+
+- JSON-encoded strings
+- opaque ids
+- UUID strings
+- path strings
+- agent-path strings
+- shell source text
+- enum strings
+- constrained symbolic strings such as `task_name` / `fork_turns`
+
 Source of truth:
 
 - Wire item shape: `codex-main/codex-rs/protocol/src/models.rs`
@@ -19,6 +30,12 @@ Source of truth:
 ## 1. Wire shape
 
 ```ts
+export type JsonEncodedString = string // requires JSON.parse
+export type OpaqueIdString = string
+export type UuidString = string
+export type AbsolutePathString = string
+export type AgentPathString = string
+
 export interface FunctionCallWireItem {
     type: 'function_call'
     name: string
@@ -40,6 +57,30 @@ export type ToolSelector
     = | { namespace?: undefined, name: string }
         | { namespace: string, name: string }
 ```
+
+### 1.1 `string` 字段审计
+
+```ts
+export type FunctionCallStringKind =
+    | 'json_encoded_string'
+    | 'opaque_id_string'
+    | 'uuid_string'
+    | 'absolute_path_string'
+    | 'agent_path_string'
+    | 'shell_source_text'
+    | 'enum_string'
+    | 'free_text'
+```
+
+关键字段：
+
+- `arguments`: JSON 字符串
+- `call_id` / `session_id` / `cell_id`: id string，其中 `session_id` 往往是数字或 runtime id，`call_id` 通常是不透明 id
+- `path` / `workdir` / `csv_path`: path string
+- `cmd` / `command`: shell source text
+- `fork_turns`: 不是自由文本，而是 `"none" | "all" | 正整数字符串`
+- `task_name`: 不是自由文本，而是 lower_snake_case 风格
+- `target`: 在 multi-agent v2 里通常是 agent path 引用，不是任意字符串
 
 ## 2. Static built-in `function_call` names
 
@@ -357,7 +398,7 @@ export interface ReadMcpResourceArgs {
 
 ```ts
 export interface SpawnAgentArgsV2 {
-    task_name: string
+    task_name: string // lower_snake_case-like constrained task name
     message: string
     agent_type?: string
     model?: string
