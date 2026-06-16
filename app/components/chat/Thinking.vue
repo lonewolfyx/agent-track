@@ -37,6 +37,7 @@ import {
     ChatThinkingFunctionCall,
     ChatThinkingReasoning,
     ChatThinkingTurnAborted,
+    ChatThinkingWebSearchCall,
     ChatTokenCount,
 } from '#components'
 
@@ -56,6 +57,7 @@ const componentMap = {
     custom_tool_call: ChatThinkingCustomToolCall,
     token_count: ChatTokenCount,
     turn_aborted: ChatThinkingTurnAborted,
+    web_search_call: ChatThinkingWebSearchCall,
 } as Partial<Record<CodexPayloadType, Component>>
 
 function resolveProps(think: CodexSessionThinking, index: number) {
