@@ -51,9 +51,7 @@
                     <div class="flex flex-col grow overflow-y-auto pt-5">
                         <main class="grow" role="content">
                             <div class="container w-4xl mx-auto">
-                                <!-- -->
                                 <SessionList />
-                                <!-- -->
                             </div>
                         </main>
                     </div>
@@ -61,45 +59,10 @@
             </div>
         </div>
     </SessionProvider>
-<!--    <Drawer v-model:open="open" direction="right" class=""> -->
-<!--        <DrawerTrigger> -->
-<!--            <Button variant="outline"> -->
-<!--                Open Drawer -->
-<!--            </Button> -->
-<!--        </DrawerTrigger> -->
-<!--        <DrawerContent -->
-<!--            :class="cn( -->
-<!--                'data-[vaul-drawer-direction=right]:sm:max-w-auto data-[vaul-drawer-direction=right]:w-11/12', -->
-<!--                'rounded-tl-xl mt-20', -->
-<!--                'border border-input border-r-0 border-b-0 shadow-lg', -->
-<!--                'bg-white/50 backdrop-blur-[7px]', -->
-<!--            )" -->
-<!--        > -->
-<!--            <SessionDetail /> -->
-<!--        </DrawerContent> -->
-<!--    </Drawer> -->
 </template>
 
 <script lang="ts" setup>
 import { Button } from '@/components/ui/button'
 
 import { cn } from '~/lib/utils'
-
-const data = [
-    { goal: 400 },
-    { goal: 300 },
-    { goal: 200 },
-    { goal: 300 },
-    { goal: 200 },
-    { goal: 278 },
-    { goal: 189 },
-    { goal: 239 },
-    { goal: 300 },
-    { goal: 200 },
-    { goal: 278 },
-    { goal: 189 },
-    { goal: 349 },
-]
-const goal = ref(350)
-const open = ref(true)
 </script>
