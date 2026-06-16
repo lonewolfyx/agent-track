@@ -19,7 +19,7 @@
                         <div class="flex items-center gap-2 text-mono">
                             <span class="text-green-500 capitalize">{{ think.toolName }}</span>
                             <span class="text-muted-foreground">{{
-                                truncateContent(JSON.parse(think.call?.arguments!)?.cmd || '', 100)
+                                truncateContent(resolveFunctionCallToolArguments(think.call as CodexResponseFunctionCall), 100)
                             }}</span>
                         </div>
                     </Button>
@@ -30,7 +30,9 @@
 </template>
 
 <script lang="ts" setup>
+import type { CodexResponseFunctionCall } from '#shared/types/function.call'
 import type { CodexSessionThinking } from '#shared/types/session'
+import { resolveFunctionCallToolArguments } from '#server/utils/resolve.function'
 import { FUNCTION_CALL } from '#shared/constant/codex.type'
 import { useChatDetail } from '~/components/chat'
 
