@@ -1,4 +1,11 @@
-# agent-track
+<div align="center">
+    <img src="https://cdn.jsdelivr.net/gh/lonewolfyx/agent-track@main/public/logo.svg" alt="usage-board logo" width="256" height="256">
+    <h1>agent-track</h1>
+</div>
+<div align="center">
+    <img src="https://cdn.jsdelivr.net/gh/lonewolfyx/agent-track@main/Snapshot.png" alt="usage-board">
+</div>
+
 
 `agent-track` is a lightweight visualization and tracing tool for local Agent / Codex sessions, designed to help you replay and understand the execution flow of a single session.
 
