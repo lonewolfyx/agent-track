@@ -40,6 +40,7 @@
     "dependencies": {
         "@clack/prompts": "^1.5.1",
         "@lucide/vue": "^1.17.0",
+        "@tanstack/vue-virtual": "^3.13.29",
         "cac": "^7.0.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
