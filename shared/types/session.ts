@@ -26,7 +26,7 @@ export interface CodexSessionListItem {
     prompt: number
     call: number
     createTime: string
-    token: CodexTokenUsage
+    token: CodexTokenUsage | object
     skills: number
 }
 
