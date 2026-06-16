@@ -8,6 +8,22 @@
     "bugs": {
         "url": "https://github.com/lonewolfyx/agent-track/issues"
     },
+    "keywords": [
+        "ai",
+        "codex",
+        "track",
+        "agent-track"
+    ],
+    "bin": {
+        "agent-track": "./bin/cli.js",
+        "at": "./bin/cli.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "engines": {
+        "node": ">=22.12.0"
+    },
     "scripts": {
         "build": "nuxt build",
         "dev": "nuxt dev",
