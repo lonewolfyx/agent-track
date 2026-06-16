@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{ type }} need pr report
+        {{ think.type }} need pr report
     </div>
 </template>
 
@@ -10,11 +10,8 @@ defineOptions({
 })
 
 defineProps<{
-    type: string
-    // think: CodexSessionThinking
-    // index: number
-    // chatIndex: number
+    think: CodexSessionThinking
+    index: number
+    chatIndex: number
 }>()
-
-// const { handleThinkingNode } = useChatDetail()
 </script>
