@@ -8,7 +8,7 @@ import type {
     CodexEventTurnAbortedPayload,
     CodexUserMessagePayload,
 } from '#shared/types/event.msg'
-import type { CodexResponseFunctionCall, CodexResponseMcpToolCall, CodexResponseMessage } from '#shared/types/response.item'
+import type { CodexResponseMcpToolCall, CodexResponseMessage } from '#shared/types/response.item'
 import type { ChatTurnList, CodexSessionThinking } from '#shared/types/session'
 import { readJsonlLines } from '#server/utils/codex'
 
