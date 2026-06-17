@@ -9,6 +9,7 @@ import type {
 import type { CodexResponseFunctionCall } from '#shared/types/function.call'
 import type {
     CodexResponseCustomToolCall,
+    CodexResponseMessage,
     CodexResponseReasoning,
     CodexResponseWebSearchCall,
 } from '#shared/types/response.item'
@@ -59,7 +60,7 @@ export interface CodexSessionThinking {
         response?: Record<string, unknown>
     }
     payload?: Record<string, unknown>
-    pairedPayload?: Record<string, unknown>
+    pairedPayload?: CodexResponseMessage
 }
 
 export interface ChatTurnList {
