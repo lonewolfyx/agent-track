@@ -5,6 +5,7 @@ export default antfu({
     typescript: true,
     pnpm: true,
     node: true,
+    markdown: false,
     vue: {
         overrides: {
             'vue/block-order': [

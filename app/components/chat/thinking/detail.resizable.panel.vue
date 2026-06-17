@@ -33,6 +33,7 @@ import {
     ChatDetailEmpty,
     ChatDetailFunctionCall,
     ChatDetailQuestion,
+    ChatDetailUserMessage,
     ChatDetailWebSearchCall,
 } from '#components'
 import { useChatDetail } from '~/components/chat'
@@ -51,6 +52,7 @@ const componentMap = {
     question: ChatDetailQuestion,
     answer: ChatDetailAnswer,
     web_search_call: ChatDetailWebSearchCall,
+    user_message: ChatDetailUserMessage,
 } as Partial<Record<CodexPayloadType, Component>>
 
 const component = computed(() => componentMap[thinkingType.value as CodexPayloadType] ?? ChatDetailEmpty)
