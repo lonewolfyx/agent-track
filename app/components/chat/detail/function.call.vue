@@ -1,26 +1,27 @@
 <template>
-    <DefineTemplate v-slot="{ title, context }">
-        <div class="flex flex-col gap-4">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">{{ title }}</span>
-            </div>
-            <CodePreview>{{ context }}</codepreview>
-        </div>
-    </DefineTemplate>
     <div class="flex flex-col gap-6">
-        <ReuseTemplate title="Input" :context="JSON.parse(think.call!.arguments)" />
-        <ReuseTemplate title="OutPut" :context="think.output!.response?.output" />
+        <ChatDetailPayloadSection title="Tool" :value="call?.name" />
+        <ChatDetailPayloadSection title="Input" :value="input" />
+        <ChatDetailPayloadSection title="Output" :value="output" />
     </div>
 </template>
 
 <script lang="ts" setup>
+import type { CodexResponseFunctionCall } from '#shared/types/function.call'
+import { parseMaybeJson } from '#shared/utils/thinking'
+
 defineOptions({
     name: 'ChatDetailFunctionCall',
 })
 
-defineProps<{
+const props = defineProps<{
     think: CodexSessionThinking
 }>()
 
-const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
+const call = computed(() => props.think.call as CodexResponseFunctionCall | undefined)
+const input = computed(() => parseMaybeJson(call.value?.arguments))
+const output = computed(() => {
+    const response = props.think.output?.response
+    return response && 'output' in response ? response.output : props.think.output?.event
+})
 </script>

@@ -1,36 +1,29 @@
 <template>
-    <div class="relative flex flex-col pl-4 pt-4">
-        <VerticalLine />
-        <div class="flex w-max items-center gap-2">
-            <div
-                class="border border-dashed rounded-full bg-white overflow-hidden cursor-pointer"
-            >
-                <Button
-                    class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
-                    size="sm"
-                    @click="handleThinkingNode(chatIndex, index, AGENT_MESSAGE)"
-                >
-                    <Icon class="size-3" name="dinkie-icons:thinking-face" />
-                    {{ truncateContent(payload.message, 50) }}
-                </Button>
-            </div>
-        </div>
-    </div>
+    <ChatThinkingNodeButton
+        :chat-index="chatIndex"
+        :detail-type="AGENT_MESSAGE"
+        icon="dinkie-icons:thinking-face"
+        :index="index"
+        label="agent message"
+        :summary="summary"
+    />
 </template>
 
 <script setup lang="ts">
 import { AGENT_MESSAGE } from '#shared/constant/codex.type'
-import { useChatDetail } from '~/components/chat'
+import { summarizeUnknown } from '#shared/utils/thinking'
 
 defineOptions({
     name: 'ChatThinkingAgentMessage',
 })
 
-defineProps<{
-    payload: CodexSessionPayload<'event_msg', 'agent_message'>
+const props = defineProps<{
+    think: CodexSessionThinking
     index: number
     chatIndex: number
 }>()
 
-const { handleThinkingNode } = useChatDetail()
+const summary = computed(() => summarizeUnknown(props.think.content && typeof props.think.content === 'object' && 'message' in props.think.content
+    ? props.think.content.message
+    : '', 50))
 </script>

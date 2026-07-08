@@ -1,3 +1,4 @@
+import type { ThinkingCallType } from '#shared/constant/codex.type'
 import type { CodexPayloadType, CodexSession, CodexSessionItem, CodexSessionPayload } from '#shared/types/codex'
 import type {
     CodexEventAgentMessagePayload,
@@ -9,32 +10,28 @@ import type {
     CodexUserMessagePayload,
 } from '#shared/types/event.msg'
 import type { CodexResponseMcpToolCall, CodexResponseMessage } from '#shared/types/response.item'
-import type { ChatTurnList, CodexSessionThinking } from '#shared/types/session'
+import type { ChatTurnList, CodexSessionThinking, ThinkingContent } from '#shared/types/session'
 import { readJsonlLines } from '#server/utils/codex'
+import { IMAGE_GENERATION_CALL, THINKING_CALL_TYPES } from '#shared/constant/codex.type'
+import { formatUnknown, resolveFunctionCallToolArguments } from '#shared/utils/thinking'
 
 const EVENT_OUTPUT_TO_CALL_TYPE = {
     exec_command_end: 'function_call',
     patch_apply_end: 'custom_tool_call',
     web_search_end: 'web_search_call',
     mcp_tool_call_end: 'mcp_tool_call',
-} as Record<CodexPayloadType, CodexPayloadType>
+    image_generation_end: 'image_generation_call',
+} as Partial<Record<CodexPayloadType, ThinkingCallType>>
 
 const RESPONSE_OUTPUT_TO_CALL_TYPE = {
     function_call_output: 'function_call',
     custom_tool_call_output: 'custom_tool_call',
     tool_search_output: 'tool_search_call',
     mcp_tool_call_output: 'mcp_tool_call',
-    dynamic_tool_call_response: 'dynamic_tool_call_request',
-} as Record<CodexPayloadType, CodexPayloadType>
+} as Partial<Record<CodexPayloadType, ThinkingCallType>>
 
-const CALL_TYPES = new Set([
-    'function_call',
-    'custom_tool_call',
-    'tool_search_call',
-    'web_search_call',
-    'mcp_tool_call',
-    'dynamic_tool_call_request',
-    'image_generation_call',
+const CALL_TYPES = new Set<string>(THINKING_CALL_TYPES)
+const UNPAIRED_CALL_TYPES = new Set<string>([
     'local_shell_call',
 ])
 
@@ -43,7 +40,7 @@ function getSkillPath(payload: CodexResponseFunctionCall): string | undefined {
         return undefined
     }
 
-    const command = (JSON.parse(payload.arguments) as { cmd: string })?.cmd || ''
+    const command = formatUnknown(resolveFunctionCallToolArguments(payload))
     const matched = command.match(/\/Users\/[^\s'"]+\/(?:\.codex|\.agents)\/skills\/[^\s'"]+\.md/g)
     return matched?.[0] ?? undefined
 }
@@ -64,13 +61,21 @@ function resolveToolName(payload: CodexSessionPayload<'event_msg'> | CodexSessio
                 (payload as unknown as CodexResponseMcpToolCall).tool || '',
             ].filter(Boolean).join('.')
         }
+        case 'mcp_tool_call_end':
+            return [
+                (payload as CodexSessionPayload<'event_msg', 'mcp_tool_call_end'>).invocation?.server,
+                (payload as CodexSessionPayload<'event_msg', 'mcp_tool_call_end'>).invocation?.tool,
+            ].filter(Boolean).join('.')
         case 'dynamic_tool_call_request':
+        case 'dynamic_tool_call_response':
             return (payload as CodexSessionPayload<'event_msg', 'dynamic_tool_call_request'>).tool
         case 'tool_search_call':
             return 'tool_search'
         case 'web_search_call':
+        case 'web_search_end':
             return 'web_search'
         case 'image_generation_call':
+        case 'image_generation_end':
             return 'image_generation'
         case 'local_shell_call':
             return 'local_shell'
@@ -81,28 +86,28 @@ function resolveToolName(payload: CodexSessionPayload<'event_msg'> | CodexSessio
 
 function createContentThinkingItem(
     line: CodexSessionItem,
-    content: string,
+    content: ThinkingContent,
     extra?: Partial<CodexSessionThinking>,
 ): CodexSessionThinking {
     return {
-        type: line.payload.type,
+        type: line.payload.type as CodexSessionThinking['type'],
         timestamp: line.timestamp,
         phase: line.payload?.phase || undefined,
         content,
-        // payload,
+        payload: line.payload,
         ...extra,
     }
 }
 
 function createOutputOnlyItem(
     line: CodexSessionItem,
-    callType: CodexPayloadType,
+    callType: ThinkingCallType,
     target: 'event' | 'response',
 ): CodexSessionThinking {
     return {
         type: callType,
         timestamp: line.timestamp,
-        call_id: line.payload.call_id,
+        call_id: getPayloadCallId(line.payload),
         toolName: resolveToolName(line.payload),
         call: undefined,
         output: {
@@ -111,19 +116,31 @@ function createOutputOnlyItem(
     }
 }
 
+function getPayloadCallId(payload: CodexSessionPayload<'event_msg'> | CodexSessionPayload<'response_item'>): string | undefined {
+    if ('call_id' in payload && typeof payload.call_id === 'string') {
+        return payload.call_id
+    }
+
+    if (payload.type === IMAGE_GENERATION_CALL) {
+        return (payload as CodexSessionPayload<'response_item', 'image_generation_call'>).id
+    }
+
+    return undefined
+}
+
 function attachOutput(item: CodexSessionThinking, line: CodexSessionItem, target: 'event' | 'response') {
     if (!item.output) {
         item.output = {}
     }
 
-    item.output[target] = line.payload
+    item.output[target] = line.payload as never
 }
 
 function findPendingCall(
     pendingByCallId: Map<string, CodexSessionThinking>,
     pendingByType: Map<string, CodexSessionThinking[]>,
     callType: string,
-    callId: string,
+    callId: string | undefined,
 ): CodexSessionThinking | undefined {
     if (callId && pendingByCallId.has(callId)) {
         return pendingByCallId.get(callId)
@@ -218,7 +235,7 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
 
         if (line.type === 'event_msg' && payloadType === 'turn_aborted') {
             currentTurn.duration = (payload as CodexEventTurnAbortedPayload).duration_ms ?? undefined
-            currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventTurnAbortedPayload).reason))
+            currentTurn.thinking.push(createContentThinkingItem(line, payload as CodexEventTurnAbortedPayload))
             currentTurn = null
             continue
         }
@@ -256,24 +273,28 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
         }
 
         if (line.type === 'event_msg' && payloadType === 'error') {
-            currentTurn.thinking.push(createContentThinkingItem(line, (payload as CodexEventErrorPayload).message))
+            currentTurn.thinking.push(createContentThinkingItem(line, payload as CodexEventErrorPayload))
             continue
         }
 
         if (CALL_TYPES.has(payloadType)) {
+            const callId = getPayloadCallId(payload)
             const item = {
-                type: payloadType,
+                type: payloadType as CodexSessionThinking['type'],
                 timestamp: line.timestamp,
-                call_id: payload.call_id,
+                call_id: callId,
                 toolName: resolveToolName(payload),
-                skill: getSkillPath(payload),
+                skill: payload.type === 'function_call' ? getSkillPath(payload) : undefined,
                 call: payload,
                 output: undefined,
-            }
+                payload,
+            } satisfies CodexSessionThinking
             currentTurn.thinking.push(item)
 
-            if (!['image_generation_call', 'local_shell_call'].includes(payloadType)) {
-                pendingByCallId.set(payload.call_id, item)
+            if (!UNPAIRED_CALL_TYPES.has(payloadType)) {
+                if (callId) {
+                    pendingByCallId.set(callId, item)
+                }
 
                 const queue = pendingByType.get(payloadType) ?? []
                 queue.push(item)
@@ -287,7 +308,7 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
             if (!callType) {
                 continue
             }
-            const item = findPendingCall(pendingByCallId, pendingByType, callType, payload.call_id)
+            const item = findPendingCall(pendingByCallId, pendingByType, callType, getPayloadCallId(payload))
 
             if (item) {
                 attachOutput(item, line, 'event')
@@ -303,7 +324,7 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
                 pendingByCallId,
                 pendingByType,
                 'dynamic_tool_call_request',
-                payload.call_id,
+                getPayloadCallId(payload),
             )
 
             if (item) {
@@ -317,7 +338,7 @@ export async function getSessionDetail(path: string): Promise<CodexSessionDetail
 
         if (line.type === 'response_item' && payloadType in RESPONSE_OUTPUT_TO_CALL_TYPE) {
             const callType = RESPONSE_OUTPUT_TO_CALL_TYPE[payloadType]!
-            const item = findPendingCall(pendingByCallId, pendingByType, callType, payload.call_id)
+            const item = findPendingCall(pendingByCallId, pendingByType, callType, getPayloadCallId(payload))
 
             if (item) {
                 attachOutput(item, line, 'response')

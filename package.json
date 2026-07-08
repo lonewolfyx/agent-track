@@ -32,6 +32,7 @@
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "typecheck": "nuxt typecheck",
+        "verify:thinking": "jiti scripts/verify-thinking-fixture.ts",
         "lint": "nuxt prepare && eslint .",
         "lint:fix": "nuxt prepare && eslint --fix",
         "prepare": "simple-git-hooks",

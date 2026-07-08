@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{ chat.question }}
+        {{ chat?.question ?? '' }}
     </div>
 </template>
 
@@ -16,5 +16,5 @@ defineProps<{
 }>()
 
 const { chats, chatIndex } = useChatDetail()
-const chat = computed(() => chats.value[chatIndex.value]!)
+const chat = computed(() => chats.value?.[chatIndex.value])
 </script>
