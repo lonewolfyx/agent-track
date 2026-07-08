@@ -1,24 +1,29 @@
 <template>
-    <div class="relative flex flex-col pl-10 pt-4">
-        <VerticalLine />
-        <div class="flex items-center gap-2 relative border-l border-input">
-            <div class="size-2 border-4 border-destructive rounded-full -ml-1 -translate-x-[0.5px]" />
-            <div class="flex items-center gap-2 text-xs">
-                <span class="text-muted-foreground font-mono capitalize">Actively aborted the request</span>
-            </div>
-        </div>
-    </div>
+    <ChatThinkingNodeButton
+        :chat-index="chatIndex"
+        :detail-type="TURN_ABORTED"
+        icon="mynaui:danger-hexagon"
+        :index="index"
+        label="turn aborted"
+        :summary="summary"
+        tone="error"
+    />
     <Bezier class="transform -scale-x-100" />
 </template>
 
 <script setup lang="ts">
+import { TURN_ABORTED } from '#shared/constant/codex.type'
+import { resolveTurnAbortedPayload, summarizeUnknown } from '#shared/utils/thinking'
+
 defineOptions({
     name: 'ChatThinkingTurnAborted',
 })
 
-defineProps<{
+const props = defineProps<{
     think: CodexSessionThinking
     index: number
     chatIndex: number
 }>()
+
+const summary = computed(() => summarizeUnknown(resolveTurnAbortedPayload(props.think)?.reason ?? props.think.content, 80))
 </script>

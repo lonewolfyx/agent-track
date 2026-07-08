@@ -1,42 +1,28 @@
 <template>
-    <div class="relative flex flex-col pl-4 pt-4">
-        <VerticalLine />
-        <div class="flex w-max items-center gap-2">
-            <div
-                class="border border-dashed rounded-full bg-white overflow-hidden cursor-pointer"
-            >
-                <Button
-                    class="bg-transparent hover:bg-transparent text-secondary-foreground capitalize"
-                    size="sm"
-                    @click="handleThinkingNode(chatIndex, index, USER_MESSAGE)"
-                >
-                    <Icon class="size-3" name="pixel:comment" />
-                    <div class="flex items-center gap-2 text-mono">
-                        <span class="text-green-500 capitalize">Quote:</span>
-                        <span class="text-muted-foreground">
-                            {{ think.pairedPayload?.content.find(i => i.type === 'input_text')?.text ?? '' }}
-                        </span>
-                    </div>
-                </Button>
-            </div>
-        </div>
-    </div>
+    <ChatThinkingNodeButton
+        :chat-index="chatIndex"
+        :detail-type="USER_MESSAGE"
+        icon="pixel:comment"
+        :index="index"
+        label="quote"
+        :summary="summary"
+    />
 </template>
 
 <script setup lang="ts">
 import type { CodexSessionThinking } from '#shared/types/session'
 import { USER_MESSAGE } from '#shared/constant/codex.type'
-import { useChatDetail } from '~/components/chat'
+import { summarizeUnknown } from '#shared/utils/thinking'
 
 defineOptions({
     name: 'ChatThinkingUserMessage',
 })
 
-defineProps<{
+const props = defineProps<{
     think: CodexSessionThinking
     index: number
     chatIndex: number
 }>()
 
-const { handleThinkingNode } = useChatDetail()
+const summary = computed(() => summarizeUnknown(props.think.pairedPayload?.content.find(item => item.type === 'input_text')?.text ?? props.think.content, 100))
 </script>

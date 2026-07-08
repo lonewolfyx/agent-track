@@ -19,23 +19,35 @@
         <div class="relative h-full overflow-auto p-4">
             <component
                 :is="component"
-                :think="chatThinking"
+                :think="chatThinking ?? emptyThinking"
             />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
+import type { ThinkingDetailType } from '#shared/constant/codex.type'
 import {
     ChatDetailAgentMessage,
     ChatDetailAnswer,
     ChatDetailCustomToolCall,
+    ChatDetailDynamicToolCall,
     ChatDetailEmpty,
+    ChatDetailError,
     ChatDetailFunctionCall,
+    ChatDetailImageGenerationCall,
+    ChatDetailLocalShellCall,
+    ChatDetailMcpToolCall,
     ChatDetailQuestion,
+    ChatDetailReasoning,
+    ChatDetailTokenCount,
+    ChatDetailToolSearchCall,
+    ChatDetailTurnAborted,
     ChatDetailUserMessage,
     ChatDetailWebSearchCall,
 } from '#components'
+import { AGENT_MESSAGE } from '#shared/constant/codex.type'
 import { useChatDetail } from '~/components/chat'
 import { cn } from '~/lib/utils'
 
@@ -47,17 +59,32 @@ const { chats, chatIndex, thinkIndex, thinkingType, reset } = useChatDetail()
 
 const componentMap = {
     agent_message: ChatDetailAgentMessage,
+    agent_reasoning: ChatDetailReasoning,
     function_call: ChatDetailFunctionCall,
     custom_tool_call: ChatDetailCustomToolCall,
+    dynamic_tool_call_request: ChatDetailDynamicToolCall,
+    error: ChatDetailError,
+    image_generation_call: ChatDetailImageGenerationCall,
+    local_shell_call: ChatDetailLocalShellCall,
+    mcp_tool_call: ChatDetailMcpToolCall,
     question: ChatDetailQuestion,
     answer: ChatDetailAnswer,
+    reasoning: ChatDetailReasoning,
+    token_count: ChatDetailTokenCount,
+    tool_search_call: ChatDetailToolSearchCall,
+    turn_aborted: ChatDetailTurnAborted,
     web_search_call: ChatDetailWebSearchCall,
     user_message: ChatDetailUserMessage,
-} as Partial<Record<CodexPayloadType, Component>>
+} satisfies Record<ThinkingDetailType, Component>
 
-const component = computed(() => componentMap[thinkingType.value as CodexPayloadType] ?? ChatDetailEmpty)
+const component = computed(() => thinkingType.value ? componentMap[thinkingType.value] : ChatDetailEmpty)
 
-const chatList = computed(() => chats.value[chatIndex.value]!)
+const chatList = computed(() => chats.value?.[chatIndex.value])
 
-const chatThinking = computed(() => chatList.value.thinking[thinkIndex.value]!)
+const chatThinking = computed(() => chatList.value?.thinking[thinkIndex.value])
+
+const emptyThinking = {
+    type: AGENT_MESSAGE,
+    timestamp: '',
+} satisfies CodexSessionThinking
 </script>

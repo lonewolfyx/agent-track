@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import type { CodexEventAgentMessagePayload } from '#shared/types/event.msg'
 import type { CodexSessionThinking } from '#shared/types/session'
 
 defineOptions({
@@ -16,5 +15,5 @@ const props = defineProps<{
     think: CodexSessionThinking
 }>()
 
-const content = computed(() => props.think.content as CodexEventAgentMessagePayload)
+const content = computed(() => props.think.pairedPayload?.content.find(item => item.type === 'input_text')?.text ?? props.think.content ?? '')
 </script>

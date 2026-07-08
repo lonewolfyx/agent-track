@@ -1,6 +1,6 @@
 <template>
     <textarea
-        v-model="chat.answer"
+        :value="chat?.answer ?? ''"
         class="w-full h-full resize-none bg-transparent"
         disabled
     />
@@ -17,5 +17,5 @@ defineProps<{
 }>()
 
 const { chats, chatIndex } = useChatDetail()
-const chat = computed(() => chats.value[chatIndex.value]!)
+const chat = computed(() => chats.value?.[chatIndex.value])
 </script>

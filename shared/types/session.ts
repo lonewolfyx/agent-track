@@ -1,16 +1,32 @@
-import type { CodexPayloadType } from '#shared/types/codex'
+import type { ThinkingTimelineType } from '#shared/constant/codex.type'
 import type {
     CodexEventAgentMessagePayload,
+    CodexEventAgentReasoningPayload,
+    CodexEventDynamicToolCallRequestPayload,
+    CodexEventDynamicToolCallResponsePayload,
+    CodexEventErrorPayload,
+    CodexEventExecCommandEndPayload,
+    CodexEventImageGenerationEndPayload,
+    CodexEventMcpToolCallEndPayload,
     CodexEventPatchApplyEndPayload,
     CodexEventTokenCountPayload,
+    CodexEventTurnAbortedPayload,
     CodexEventWebSearchEndPayload,
     CodexTokenUsage,
 } from '#shared/types/event.msg'
 import type { CodexResponseFunctionCall } from '#shared/types/function.call'
 import type {
     CodexResponseCustomToolCall,
+    CodexResponseCustomToolCallOutput,
+    CodexResponseFunctionCallOutput,
+    CodexResponseImageGenerationCall,
+    CodexResponseLocalShellCall,
+    CodexResponseMcpToolCall,
+    CodexResponseMcpToolCallOutput,
     CodexResponseMessage,
     CodexResponseReasoning,
+    CodexResponseToolSearchCall,
+    CodexResponseToolSearchOutput,
     CodexResponseWebSearchCall,
 } from '#shared/types/response.item'
 import type { CodexTurnContextPayload } from '#shared/types/turn.context'
@@ -40,11 +56,38 @@ export interface CodexSessionMonthGroup {
 
 export type ThinkingContent = string
     | CodexEventAgentMessagePayload
+    | CodexEventAgentReasoningPayload
+    | CodexEventErrorPayload
     | CodexEventTokenCountPayload
+    | CodexEventTurnAbortedPayload
     | CodexResponseReasoning
 
+export type ThinkingCallPayload
+    = | CodexResponseFunctionCall
+        | CodexResponseCustomToolCall
+        | CodexResponseToolSearchCall
+        | CodexResponseWebSearchCall
+        | CodexResponseMcpToolCall
+        | CodexEventDynamicToolCallRequestPayload
+        | CodexResponseImageGenerationCall
+        | CodexResponseLocalShellCall
+
+export type ThinkingEventOutputPayload
+    = | CodexEventExecCommandEndPayload
+        | CodexEventPatchApplyEndPayload
+        | CodexEventWebSearchEndPayload
+        | CodexEventMcpToolCallEndPayload
+        | CodexEventDynamicToolCallResponsePayload
+        | CodexEventImageGenerationEndPayload
+
+export type ThinkingResponseOutputPayload
+    = | CodexResponseFunctionCallOutput
+        | CodexResponseCustomToolCallOutput
+        | CodexResponseToolSearchOutput
+        | CodexResponseMcpToolCallOutput
+
 export interface CodexSessionThinking {
-    type: CodexPayloadType
+    type: ThinkingTimelineType
     timestamp: string
     phase?: string
     role?: string
@@ -54,12 +97,12 @@ export interface CodexSessionThinking {
     skill?: string
     content?: ThinkingContent
     tokenUsage?: CodexTokenUsage
-    call?: CodexResponseFunctionCall | CodexResponseCustomToolCall | CodexResponseWebSearchCall
+    call?: ThinkingCallPayload
     output?: {
-        event?: CodexEventPatchApplyEndPayload | CodexEventWebSearchEndPayload
-        response?: Record<string, unknown>
+        event?: ThinkingEventOutputPayload
+        response?: ThinkingResponseOutputPayload
     }
-    payload?: Record<string, unknown>
+    payload?: unknown
     pairedPayload?: CodexResponseMessage
 }
 
